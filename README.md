@@ -20,7 +20,7 @@ This is an admin app for managing orders, built with Flutter and Provider for st
     * Pickup branch
     * Payment method
     * Pickup date and time
-    * Recite (itemized list of items ordered)
+    * Recite
     * Subtotal
     * VAT
     * Total
