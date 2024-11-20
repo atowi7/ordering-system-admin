@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# ordering-system-admin
-Flutter Project
-=======
 # Order System Admin App
 
 This is an admin app for managing orders, built with Flutter and Provider for state management.
@@ -34,13 +30,19 @@ This is an admin app for managing orders, built with Flutter and Provider for st
 
 ## Screenshots
 
-* Login screen: ![image](images/orderSystemAdminAppLoginScreen.png)
-* Home screen: ![image](images/orderSystemAdminAppHomeScreen.png)
-* Order Change Stats screen: ![image](images/orderSystemAdminAppChangeStatusDialogScreen.png)
-* Order details screen: ![image](images/orderSystemAdminAppOrderDetailsScreen1.png)
-* Order details screen: ![image](images/orderSystemAdminAppOrderDetailsScreen2.png)
-* Filter options: ![image](images/orderSystemAdminAppFilter.png)
-* Sort options: ![image](images/orderSystemAdminAppSortby.png)
+### Login screen: 
+![image](images/orderSystemAdminAppLoginScreen.png)
+### Home screen: 
+![image](images/orderSystemAdminAppHomeScreen.png)
+### Order Change Stats screen:
+ ![image](images/orderSystemAdminAppChangeStatusDialogScreen.png)
+### Order details screen: 
+![image](images/orderSystemAdminAppOrderDetailsScreen1.png)
+![image](images/orderSystemAdminAppOrderDetailsScreen2.png)
+### Filter options:
+ ![image](images/orderSystemAdminAppFilter.png)
+### Sort options: 
+![image](images/orderSystemAdminAppSortby.png)
 
 ## Dependencies
 * Provider
@@ -53,4 +55,3 @@ This is an admin app for managing orders, built with Flutter and Provider for st
 4. View order details
 5. Change order status
 6. View invoices
->>>>>>> 67451fd (Initial commit)
