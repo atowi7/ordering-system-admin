@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.grey[300],
           actions: [
             IconButton(
                 onPressed: () {
@@ -22,21 +23,38 @@ class HomeScreen extends StatelessWidget {
                 icon: const Icon(Icons.logout_sharp, size: 20)),
           ],
         ),
-        backgroundColor: Colors.grey[350],
+        backgroundColor: Colors.grey[300],
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // IconButton(
             //     onPressed: () {},
             //     icon: const Icon(Icons.logout_sharp, size: 20)),
-            Text('Order List', style: Theme.of(context).textTheme.displayLarge),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text('Order List',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge!
+                      .copyWith(fontSize: 28)),
+            ),
+            const SizedBox(height: 5),
             Expanded(
               child: ListView.builder(
                 // shrinkWrap: true,
                 itemCount: orderProvider.orders.length,
                 itemBuilder: (context, index) {
                   final order = orderProvider.orders[index];
-                  return OrderItem(order: order);
+                  return Column(
+                    children: [
+                      OrderItem(order: order),
+                      const Divider(
+                        color: Colors.black,
+                        thickness: 0.4,
+                        height: 2,
+                      ),
+                    ],
+                  );
                 },
               ),
             ),
@@ -44,38 +62,57 @@ class HomeScreen extends StatelessWidget {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: Container(
-          height: 40,
-          // padding: const EdgeInsets.only(bottom: 10),
+          height: 30,
           decoration: BoxDecoration(
               color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(10)),
+              borderRadius: BorderRadius.circular(25)),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextButton.icon(
+                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
                   onPressed: () {
                     orderProvider.showBottomSheetForSort(context);
                   },
-                  icon: const Icon(
-                    Icons.unfold_more,
-                    size: 18,
-                    color: Colors.white,
+                  icon: Transform.translate(
+                    offset: const Offset(8, 0),
+                    child: const Icon(
+                      Icons.unfold_more,
+                      size: 18,
+                      color: Colors.white,
+                    ),
                   ),
                   label: Text('Sort',
-                      style: Theme.of(context).textTheme.displaySmall)),
-              const VerticalDivider(
-                  thickness: 1, width: 1, color: Colors.white),
+                      style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          height: 1,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white))),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: VerticalDivider(
+                    thickness: 1, width: 1, color: Colors.white),
+              ),
               TextButton.icon(
+                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
                   onPressed: () {
                     orderProvider.showBottomSheetForFilter(context);
                   },
                   icon: const Icon(
                     Icons.filter_alt,
-                    size: 18,
+                    size: 16,
                     color: Colors.white,
                   ),
-                  label: Text('Filter',
-                      style: Theme.of(context).textTheme.displaySmall)),
+                  label: Transform.translate(
+                    offset: const Offset(-8, 0),
+                    child: Text('Filter',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
+                                height: 1,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white)),
+                  )),
             ],
           ),
         ),
@@ -99,7 +136,7 @@ class OrderItem extends StatelessWidget {
       },
       child: Container(
         margin: const EdgeInsets.all(10),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Column(
@@ -110,125 +147,144 @@ class OrderItem extends StatelessWidget {
                 Text(order.id,
                     style: Theme.of(context)
                         .textTheme
-                        .displayMedium!
-                        .copyWith(fontWeight: FontWeight.w700)),
+                        .displaySmall!
+                        .copyWith(fontWeight: FontWeight.w900)),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(order.status ?? 'Pendng',
                         style: Theme.of(context)
                             .textTheme
-                            .displayMedium!
-                            .copyWith(color: Colors.grey[400])),
-                    TextButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => Consumer<OrderProvider>(
-                                builder: (context, provider, child) {
-                              return ChangeOrderStatusDialog(
-                                  orderId: order.id,
-                                  selectedStatus: provider.selectedStatus,
-                                  onStatusUpdated: (newStatus) =>
-                                      provider.updateSelectedStatus(newStatus),
-                                  onStatusChanged: (newStatus) => provider
-                                      .changeOrderStatus(order.id, newStatus));
-                            }),
-                          );
-                        },
-                        child: Text('Change',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ))),
+                            .displaySmall!
+                            .copyWith(
+                                fontWeight: FontWeight.w900,
+                                color: Colors.grey[400])),
+                    const SizedBox(width: 5),
+                    InkWell(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => Consumer<OrderProvider>(
+                              builder: (context, provider, child) {
+                            return ChangeOrderStatusDialog(
+                                orderId: order.id,
+                                selectedStatus: provider.selectedStatus,
+                                onStatusUpdated: (newStatus) =>
+                                    provider.updateSelectedStatus(newStatus),
+                                onStatusChanged: (newStatus) => provider
+                                    .changeOrderStatus(order.id, newStatus));
+                          }),
+                        );
+                      },
+                      child: Text('Change',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displaySmall!
+                              .copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.blue,
+                                height: 1,
+                                decoration: TextDecoration.underline,
+                              )),
+                    ),
                   ],
                 ),
               ],
             ),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Username',
-                    style: Theme.of(context).textTheme.displayMedium),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )),
                 Text(order.username,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.grey[400])),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        fontWeight: FontWeight.w800, color: Colors.grey[400])),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Phone number',
-                    style: Theme.of(context).textTheme.displayMedium),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )),
                 Text(order.phoneNumber,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.grey[400])),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        fontWeight: FontWeight.w800, color: Colors.grey[400])),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Branch',
-                    style: Theme.of(context).textTheme.displayMedium),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )),
                 Text(order.branch,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.grey[400])),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        fontWeight: FontWeight.w800, color: Colors.grey[400])),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Payment method',
-                    style: Theme.of(context).textTheme.displayMedium),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )),
                 Text(order.paymentMethod,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.grey[400])),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        fontWeight: FontWeight.w800, color: Colors.grey[400])),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Service',
-                    style: Theme.of(context).textTheme.displayMedium),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                          fontWeight: FontWeight.w500,
+                        )),
                 Text(order.service,
-                    style: Theme.of(context)
-                        .textTheme
-                        .displayMedium!
-                        .copyWith(color: Colors.grey[400])),
+                    style: Theme.of(context).textTheme.displaySmall!.copyWith(
+                        fontWeight: FontWeight.w800, color: Colors.grey[400])),
               ],
             ),
-            const SizedBox(height: 10),
-            const Divider(color: Colors.black, thickness: 1),
-            const SizedBox(height: 10),
+            const SizedBox(height: 5),
+            Divider(color: Colors.grey[400], thickness: 0.5),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Invoice',
-                    style: Theme.of(context).textTheme.displayMedium!),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall!
+                        .copyWith(height: 1, fontWeight: FontWeight.w600)),
                 // const Spacer(),
-                TextButton.icon(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.open_in_new,
-                    color: Colors.grey[400],
+                SizedBox(
+                  height: 20,
+                  child: TextButton.icon(
+                    onPressed: () {},
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                    ),
+                    icon: Icon(
+                      Icons.open_in_new,
+                      size: 20,
+                      color: Colors.grey[400],
+                    ),
+                    iconAlignment: IconAlignment.end,
+                    label: Text('View document',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displaySmall!
+                            .copyWith(
+                                fontWeight: FontWeight.w800,
+                                height: 1,
+                                color: Colors.grey[400])),
                   ),
-                  iconAlignment: IconAlignment.end,
-                  label: Text('View document',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(color: Colors.grey[400])),
                 )
                 // Row(
                 //   mainAxisSize: MainAxisSize.min,
@@ -271,126 +327,163 @@ class ChangeOrderStatusDialog extends StatelessWidget {
       backgroundColor: Colors.white,
       title: Text('Change Order Status',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.displayLarge),
-      content: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Choose the status that matches the order number $orderId',
-                style: Theme.of(context).textTheme.displayMedium),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RadioListTile<String>(
-                  title: Text('Pending',
+          style: Theme.of(context)
+              .textTheme
+              .displayMedium!
+              .copyWith(fontWeight: FontWeight.w700)),
+      content: SizedBox(
+        height: 350,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Choose the status that matches the order number $orderId',
+                  style: Theme.of(context)
+                      .textTheme
+                      .displaySmall!
+                      .copyWith(fontWeight: FontWeight.w500)),
+              RadioListTile<String>(
+                title: Transform.translate(
+                  offset: const Offset(-16, 0),
+                  child: Text('Pending',
                       style: Theme.of(context)
                           .textTheme
                           .displayMedium!
-                          .copyWith(color: Colors.grey[400])),
-                  value: 'Pending',
-                  groupValue: selectedStatus,
-                  onChanged: (value) {
-                    if (value != null) {
-                      onStatusUpdated(value);
-                    }
-                  },
+                          .copyWith(fontSize: 16, color: Colors.grey[500])),
                 ),
-                RadioListTile<String>(
-                  title: Text('Preparing',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(color: Colors.grey[400])),
+                value: 'Pending',
+                groupValue: selectedStatus,
+                fillColor: MaterialStateProperty.all(Colors.grey),
+                onChanged: (value) {
+                  if (value != null) {
+                    onStatusUpdated(value);
+                  }
+                },
+              ),
+              Transform.translate(
+                offset: const Offset(0, -15),
+                child: RadioListTile<String>(
+                  title: Transform.translate(
+                    offset: const Offset(-16, 0),
+                    child: Text('Preparing',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(fontSize: 16, color: Colors.grey[500])),
+                  ),
                   value: 'Preparing',
                   groupValue: selectedStatus,
+                  fillColor: MaterialStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     if (value != null) {
                       onStatusUpdated(value);
                     }
                   },
                 ),
-                RadioListTile<String>(
-                  title: Text('Ready',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(color: Colors.grey[400])),
+              ),
+              Transform.translate(
+                offset: const Offset(0, -30),
+                child: RadioListTile<String>(
+                  title: Transform.translate(
+                    offset: const Offset(-16, 0),
+                    child: Text('Ready',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(fontSize: 16, color: Colors.grey[500])),
+                  ),
                   value: 'Ready',
                   groupValue: selectedStatus,
+                  fillColor: MaterialStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     if (value != null) {
                       onStatusUpdated(value);
                     }
                   },
                 ),
-                RadioListTile<String>(
-                  title: Text('Completed',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(color: Colors.grey[400])),
+              ),
+              Transform.translate(
+                offset: const Offset(0, -45),
+                child: RadioListTile<String>(
+                  title: Transform.translate(
+                    offset: const Offset(-16, 0),
+                    child: Text('Completed',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(fontSize: 16, color: Colors.grey[500])),
+                  ),
                   value: 'Completed',
                   groupValue: selectedStatus,
+                  fillColor: MaterialStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     if (value != null) {
                       onStatusUpdated(value);
                     }
                   },
                 ),
-                RadioListTile<String>(
-                  title: Text('Canceled',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .copyWith(color: Colors.grey[400])),
+              ),
+              Transform.translate(
+                offset: const Offset(0, -60),
+                child: RadioListTile<String>(
+                  title: Transform.translate(
+                    offset: const Offset(-16, 0),
+                    child: Text('Canceled',
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayMedium!
+                            .copyWith(fontSize: 16, color: Colors.grey[500])),
+                  ),
                   value: 'Canceled',
                   groupValue: selectedStatus,
+                  fillColor: MaterialStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     onStatusUpdated(value!);
                   },
                 ),
-              ],
-            ),
-          ],
+              ),
+              Transform.translate(
+                offset: const Offset(0, -50),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                      onPressed: () {
+                        if (selectedStatus != null) {
+                          onStatusChanged(selectedStatus);
+                          Navigator.of(context).pop();
+                        }
+                      },
+                      child: Text('Change',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(color: Colors.white))),
+                ),
+              ),
+              Transform.translate(
+                offset: const Offset(0, -50),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(color: Colors.grey[400]))),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-      actions: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
-              onPressed: () {
-                if (selectedStatus != null) {
-                  onStatusChanged(selectedStatus);
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text('Change',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: Colors.white))),
-        ),
-        const SizedBox(height: 8),
-        SizedBox(
-          width: double.infinity,
-          child: TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displaySmall!
-                      .copyWith(color: Colors.grey[400]))),
-        ),
-      ],
     );
   }
 }

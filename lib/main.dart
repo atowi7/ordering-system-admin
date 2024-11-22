@@ -22,21 +22,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Ordering System Admin',
         theme: ThemeData(
-             primaryColor: const Color.fromARGB(255, 141, 24, 56),
-            textTheme: const TextTheme(
-              displayLarge: TextStyle(
-                  fontSize: 24,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w900),
-              displayMedium: TextStyle(
-                  fontSize: 18,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w600),
-              displaySmall: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w200),
-            )),
+          primaryColor: const Color(0xFF8a3ab9),
+          textTheme: const TextTheme(
+            displayLarge: TextStyle(
+                fontSize: 24, color: Colors.black, fontWeight: FontWeight.w900),
+            displayMedium: TextStyle(
+                fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
+            displaySmall: TextStyle(
+                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w200),
+          ),
+        ),
         home: const LoginScreen(),
         routes: AppRoutes.routes,
         debugShowCheckedModeBanner: false,

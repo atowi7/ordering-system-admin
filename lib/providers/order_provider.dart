@@ -176,7 +176,7 @@ class OrderProvider extends ChangeNotifier {
     if (orderIndex != -1) {
       _orders[orderIndex].status = newStatus;
 
-      _selectedStatus=null;
+      _selectedStatus = null;
       notifyListeners();
     }
     showStatusChangeDialog = false;
@@ -202,7 +202,7 @@ class OrderProvider extends ChangeNotifier {
       builder: (context) {
         return Consumer<OrderProvider>(builder: (context, provider, child) {
           return Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(20)),
             child: Column(
@@ -220,37 +220,70 @@ class OrderProvider extends ChangeNotifier {
                         child: Text('Clear',
                             style: Theme.of(context)
                                 .textTheme
-                                .displayMedium!
+                                .displaySmall!
                                 .copyWith(
-                                  color: Theme.of(context).primaryColor,
-                                ))),
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w500))),
                   ],
                 ),
-                RadioListTile<String>(
-                  title: Text('Date : old to new',
-                      style: Theme.of(context).textTheme.displaySmall),
-                  value: 'old_to_new',
-                  groupValue: provider.selectedSort,
-                  onChanged: (value) => updateSelectedSort(value),
+                Transform.translate(
+                  offset: const Offset(-8, -8),
+                  child: RadioListTile<String>(
+                    title: Transform.translate(
+                      offset: const Offset(-16, 0),
+                      child: Text('Date : new to old',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontSize: 16, color: Colors.grey[500])),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    fillColor: MaterialStateProperty.all(Colors.grey),
+                    value: 'new_to_old',
+                    groupValue: provider.selectedSort,
+                    onChanged: (value) => updateSelectedSort(value),
+                  ),
                 ),
-                RadioListTile<String>(
-                  title: Text('Date : new to old',
-                      style: Theme.of(context).textTheme.displaySmall),
-                  value: 'new_to_old',
-                  groupValue: provider.selectedSort,
-                  onChanged: (value) => updateSelectedSort(value),
+                Transform.translate(
+                  offset: const Offset(-8, -16),
+                  child: RadioListTile<String>(
+                    title: Transform.translate(
+                      offset: const Offset(-16, 0),
+                      child: Text('Date : old to new',
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium!
+                              .copyWith(fontSize: 16, color: Colors.grey[500])),
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    fillColor: MaterialStateProperty.all(Colors.grey),
+                    value: 'old_to_new',
+                    groupValue: provider.selectedSort,
+                    onChanged: (value) => updateSelectedSort(value),
+                  ),
                 ),
-                Center(
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                      onPressed: () {
-                        provider.sortOrders();
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Save',
-                          style: Theme.of(context).textTheme.displayMedium)),
+                Transform.translate(
+                  offset: const Offset(0, -8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    width: double.infinity,
+                    height: 40,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                        ),
+                        onPressed: () {
+                          provider.sortOrders();
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('Save',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(color: Colors.white))),
+                  ),
                 )
               ],
             ),
@@ -263,16 +296,17 @@ class OrderProvider extends ChangeNotifier {
   void showBottomSheetForFilter(BuildContext context) {
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (context) {
         return Consumer<OrderProvider>(builder: (context, provider, child) {
           return Container(
-            height: MediaQuery.of(context).size.height * 0.9,
-            padding: const EdgeInsets.all(10),
+            height: MediaQuery.of(context).size.height * 0.78,
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(20)),
             child: SingleChildScrollView(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
+                 mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -290,8 +324,9 @@ class OrderProvider extends ChangeNotifier {
                           child: Text('Clear',
                               style: Theme.of(context)
                                   .textTheme
-                                  .displayMedium!
+                                  .displaySmall!
                                   .copyWith(
+                                    fontWeight: FontWeight.w600,
                                     color: Theme.of(context).primaryColor,
                                   ))),
                     ],
@@ -302,134 +337,240 @@ class OrderProvider extends ChangeNotifier {
                           .textTheme
                           .displaySmall!
                           .copyWith(fontWeight: FontWeight.w900)),
-                  RadioListTile<String>(
-                    title: Text('Pending',
+                  Transform.translate(
+                    offset: const Offset(-8, 0),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('Pending',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'pending',
+                      groupValue: provider.selectedFilterStatus,
+                      onChanged: (value) => updateSelectedFilterStatus(value),
+                    ),
+                  ),
+                  Transform.translate(
+                    offset: const Offset(-8, -15),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('preparing',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'preparing',
+                      groupValue: provider.selectedFilterStatus,
+                      onChanged: (value) => updateSelectedFilterStatus(value),
+                    ),
+                  ),
+                  Transform.translate(
+                    offset: const Offset(-8, -30),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('Ready',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'Ready',
+                      groupValue: provider.selectedFilterStatus,
+                      onChanged: (value) => updateSelectedFilterStatus(value),
+                    ),
+                  ),
+                  Transform.translate(
+                    offset: const Offset(-8, -45),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('Completed',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'Completed',
+                      groupValue: provider.selectedFilterStatus,
+                      onChanged: (value) => updateSelectedFilterStatus(value),
+                    ),
+                  ),
+                  Transform.translate(
+                    offset: const Offset(-8, -60),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('Canceled',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'Canceled',
+                      groupValue: provider.selectedFilterStatus,
+                      onChanged: (value) => updateSelectedFilterStatus(value),
+                    ),
+                  ),
+                  // const SizedBox(height: 10),
+                  Transform.translate(
+                    offset: const Offset(4, -50),
+                    child: Text('Payment method',
                         style: Theme.of(context)
                             .textTheme
                             .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'pending',
-                    groupValue: provider.selectedFilterStatus,
-                    onChanged: (value) => updateSelectedFilterStatus(value),
+                            .copyWith(fontWeight: FontWeight.w900)),
                   ),
-                  RadioListTile<String>(
-                    title: Text('preparing',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'preparing',
-                    groupValue: provider.selectedFilterStatus,
-                    onChanged: (value) => updateSelectedFilterStatus(value),
+                  Transform.translate(
+                    offset: const Offset(-8, -55),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('CASH',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                    height: 1,
+                                    fontSize: 16,
+                                    color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'CASH',
+                      groupValue: provider.selectedFilterPayment,
+                      onChanged: (value) => updateSelectedFilterPayment(value),
+                    ),
                   ),
-                  RadioListTile<String>(
-                    title: Text('Ready',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'Ready',
-                    groupValue: provider.selectedFilterStatus,
-                    onChanged: (value) => updateSelectedFilterStatus(value),
+                  Transform.translate(
+                    offset: const Offset(-8, -75),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('CREDIT_CARD',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(
+                                    height: 1,
+                                    fontSize: 16,
+                                    color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'CREDIT_CARD',
+                      groupValue: provider.selectedFilterPayment,
+                      onChanged: (value) => updateSelectedFilterPayment(value),
+                    ),
                   ),
-                  RadioListTile<String>(
-                    title: Text('Completed',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'Completed',
-                    groupValue: provider.selectedFilterStatus,
-                    onChanged: (value) => updateSelectedFilterStatus(value),
+                  Transform.translate(
+                    offset: const Offset(-8, -90),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('MADA',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'MADA',
+                      groupValue: provider.selectedFilterPayment,
+                      onChanged: (value) => updateSelectedFilterPayment(value),
+                    ),
                   ),
-                  RadioListTile<String>(
-                    title: Text('Canceled',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'Canceled',
-                    groupValue: provider.selectedFilterStatus,
-                    onChanged: (value) => updateSelectedFilterStatus(value),
+                  Transform.translate(
+                    offset: const Offset(-8, -105),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('APPLE',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'APPLE',
+                      groupValue: provider.selectedFilterPayment,
+                      onChanged: (value) => updateSelectedFilterPayment(value),
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Text('Payment method',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall!
-                          .copyWith(fontWeight: FontWeight.w900)),
-                  RadioListTile<String>(
-                    title: Text('CASH',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'CASH',
-                    groupValue: provider.selectedFilterPayment,
-                    onChanged: (value) => updateSelectedFilterPayment(value),
+                  Transform.translate(
+                    offset: const Offset(-8, -120),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('PORTAL',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'PORTAL',
+                      groupValue: provider.selectedFilterPayment,
+                      onChanged: (value) => updateSelectedFilterPayment(value),
+                    ),
                   ),
-                  RadioListTile<String>(
-                    title: Text('CREDIT_CARD',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'CREDIT_CARD',
-                    groupValue: provider.selectedFilterPayment,
-                    onChanged: (value) => updateSelectedFilterPayment(value),
+                  Transform.translate(
+                    offset: const Offset(-8, -135),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text('WALLET',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium!
+                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      value: 'WALLET',
+                      groupValue: provider.selectedFilterPayment,
+                      onChanged: (value) => updateSelectedFilterPayment(value),
+                    ),
                   ),
-                  RadioListTile<String>(
-                    title: Text('MADA',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'MADA',
-                    groupValue: provider.selectedFilterPayment,
-                    onChanged: (value) => updateSelectedFilterPayment(value),
-                  ),
-                  RadioListTile<String>(
-                    title: Text('APPLE',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'APPLE',
-                    groupValue: provider.selectedFilterPayment,
-                    onChanged: (value) => updateSelectedFilterPayment(value),
-                  ),
-                  RadioListTile<String>(
-                    title: Text('PORTAL',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'PORTAL',
-                    groupValue: provider.selectedFilterPayment,
-                    onChanged: (value) => updateSelectedFilterPayment(value),
-                  ),
-                  RadioListTile<String>(
-                    title: Text('WALLET',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(color: Colors.grey)),
-                    value: 'WALLET',
-                    groupValue: provider.selectedFilterPayment,
-                    onChanged: (value) => updateSelectedFilterPayment(value),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                        ),
-                        onPressed: () {
-                          sortOrders();
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Save',
-                            style: Theme.of(context).textTheme.displayMedium)),
+                  Transform.translate(
+                    offset: const Offset(-8, -130),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10)),
+                          ),
+                          onPressed: () {
+                            sortOrders();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Save',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium!
+                                  .copyWith(color: Colors.white))),
+                    ),
                   )
                 ],
               ),
