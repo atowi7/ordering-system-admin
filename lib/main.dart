@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/constant/app_routes.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
-import 'package:ordering_system_admin/providers/user_provider.dart';
-import 'package:ordering_system_admin/views/login_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:ordering_system_admin/enhanced_material_app.dart';
+import 'package:ordering_system_admin/views/auth/login/screen.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   runApp(const MyApp());
 }
@@ -14,11 +13,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => OrderProvider()),
-      ],
+    return EnhancedMaterialApp(
       child: MaterialApp(
         title: 'Ordering System Admin',
         theme: ThemeData(

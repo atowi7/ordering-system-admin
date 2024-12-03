@@ -116,6 +116,10 @@ class OrderProvider extends ChangeNotifier {
   String? get selectedFilterPayment => _selectedFilterPayment;
   String? get selectedSort => _selectedSort;
 
+  List<OrderModel> getorders() {
+    return orders;
+  }
+
   void sortOrders() {
     if (_selectedSort == 'old_to_new') {
       _orders.sort((a, b) => a.date.compareTo(b.date));
@@ -238,7 +242,7 @@ class OrderProvider extends ChangeNotifier {
                               .copyWith(fontSize: 16, color: Colors.grey[500])),
                     ),
                     contentPadding: EdgeInsets.zero,
-                    fillColor: MaterialStateProperty.all(Colors.grey),
+                    fillColor: WidgetStateProperty.all(Colors.grey),
                     value: 'new_to_old',
                     groupValue: provider.selectedSort,
                     onChanged: (value) => updateSelectedSort(value),
@@ -256,7 +260,7 @@ class OrderProvider extends ChangeNotifier {
                               .copyWith(fontSize: 16, color: Colors.grey[500])),
                     ),
                     contentPadding: EdgeInsets.zero,
-                    fillColor: MaterialStateProperty.all(Colors.grey),
+                    fillColor: WidgetStateProperty.all(Colors.grey),
                     value: 'old_to_new',
                     groupValue: provider.selectedSort,
                     onChanged: (value) => updateSelectedSort(value),
@@ -306,7 +310,7 @@ class OrderProvider extends ChangeNotifier {
                 color: Colors.white, borderRadius: BorderRadius.circular(20)),
             child: SingleChildScrollView(
               child: Column(
-                 mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -346,10 +350,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'pending',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -364,10 +369,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'preparing',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -382,10 +388,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'Ready',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -400,10 +407,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'Completed',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -418,10 +426,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'Canceled',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -451,7 +460,7 @@ class OrderProvider extends ChangeNotifier {
                                     color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'CASH',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -472,7 +481,7 @@ class OrderProvider extends ChangeNotifier {
                                     color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'CREDIT_CARD',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -487,10 +496,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'MADA',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -505,10 +515,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'APPLE',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -523,10 +534,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'PORTAL',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -541,10 +553,11 @@ class OrderProvider extends ChangeNotifier {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                                .copyWith(
+                                    fontSize: 16, color: Colors.grey[500])),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'WALLET',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
