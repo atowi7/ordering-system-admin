@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ordering_system_admin/views/home_screen.dart';
-import 'package:ordering_system_admin/views/login_screen.dart';
+import 'package:ordering_system_admin/views/home/screen.dart';
+import 'package:ordering_system_admin/views/auth/login/screen.dart';
 
 class AppRoutes {
   static const login = '/login';

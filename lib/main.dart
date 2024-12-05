@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:ordering_system_admin/constant/app_routes.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
-import 'package:ordering_system_admin/providers/user_provider.dart';
-import 'package:ordering_system_admin/views/login_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:ordering_system_admin/design_system/app_routes.dart';
+import 'package:ordering_system_admin/design_system/app_text.dart';
+import 'package:ordering_system_admin/design_system/app_themes.dart';
+import 'package:ordering_system_admin/enhancedmaterialapp.dart';
+import 'package:ordering_system_admin/views/auth/login/screen.dart';
 
+// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() {
   runApp(const MyApp());
 }
@@ -14,24 +15,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-        ChangeNotifierProvider(create: (_) => OrderProvider()),
-      ],
+    return EnhancedMaterialApp(
       child: MaterialApp(
-        title: 'Ordering System Admin',
-        theme: ThemeData(
-          primaryColor: const Color(0xFF8a3ab9),
-          textTheme: const TextTheme(
-            displayLarge: TextStyle(
-                fontSize: 24, color: Colors.black, fontWeight: FontWeight.w900),
-            displayMedium: TextStyle(
-                fontSize: 18, color: Colors.black, fontWeight: FontWeight.w600),
-            displaySmall: TextStyle(
-                fontSize: 14, color: Colors.black, fontWeight: FontWeight.w200),
-          ),
-        ),
+        title: AppText.appName,
+        // theme: AppTheme.theme,
         home: const LoginScreen(),
         routes: AppRoutes.routes,
         debugShowCheckedModeBanner: false,

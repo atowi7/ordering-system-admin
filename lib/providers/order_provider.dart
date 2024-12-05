@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
+import 'package:ordering_system_admin/services/order_service.dart';
 import 'package:provider/provider.dart';
 
 class OrderProvider extends ChangeNotifier {
@@ -101,6 +103,9 @@ class OrderProvider extends ChangeNotifier {
     'Ready for pickup',
     'pickup'
   ];
+
+  final orderService = OrderService();
+
   bool showStatusChangeDialog = false;
   // String? _selectedOrderId;
   String? _selectedStatus;
@@ -115,6 +120,16 @@ class OrderProvider extends ChangeNotifier {
   String? get selectedFilterStatus => _selectedFilterStatus;
   String? get selectedFilterPayment => _selectedFilterPayment;
   String? get selectedSort => _selectedSort;
+
+  Future<List<OrderModel>> getOrders() async {
+    final orders = await orderService.getOrders();
+
+    if (orders != null) {
+      return orders;
+    } else {
+      return _orders;
+    }
+  }
 
   void sortOrders() {
     if (_selectedSort == 'old_to_new') {
@@ -175,6 +190,7 @@ class OrderProvider extends ChangeNotifier {
     final orderIndex = _orders.indexWhere((o) => o.id == orderId);
     if (orderIndex != -1) {
       _orders[orderIndex].status = newStatus;
+       orderService.upadateOrderStatus(orderId!);
 
       _selectedStatus = null;
       notifyListeners();
@@ -211,19 +227,12 @@ class OrderProvider extends ChangeNotifier {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Sort by',
-                        style: Theme.of(context).textTheme.displayMedium),
+                    const Text('Sort by', style: AppTheme.sortHead),
                     TextButton(
                         onPressed: () {
                           provider.resetSort();
                         },
-                        child: Text('Clear',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displaySmall!
-                                .copyWith(
-                                    color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.w500))),
+                        child: const Text('Clear', style: AppTheme.clearBtn)),
                   ],
                 ),
                 Transform.translate(
@@ -231,14 +240,11 @@ class OrderProvider extends ChangeNotifier {
                   child: RadioListTile<String>(
                     title: Transform.translate(
                       offset: const Offset(-16, 0),
-                      child: Text('Date : new to old',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      child: const Text('Date : new to old',
+                          style: AppTheme.sortOpt),
                     ),
                     contentPadding: EdgeInsets.zero,
-                    fillColor: MaterialStateProperty.all(Colors.grey),
+                    fillColor: WidgetStateProperty.all(Colors.grey),
                     value: 'new_to_old',
                     groupValue: provider.selectedSort,
                     onChanged: (value) => updateSelectedSort(value),
@@ -249,14 +255,11 @@ class OrderProvider extends ChangeNotifier {
                   child: RadioListTile<String>(
                     title: Transform.translate(
                       offset: const Offset(-16, 0),
-                      child: Text('Date : old to new',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(fontSize: 16, color: Colors.grey[500])),
+                      child: const Text('Date : old to new',
+                          style: AppTheme.sortOpt),
                     ),
                     contentPadding: EdgeInsets.zero,
-                    fillColor: MaterialStateProperty.all(Colors.grey),
+                    fillColor: WidgetStateProperty.all(Colors.grey),
                     value: 'old_to_new',
                     groupValue: provider.selectedSort,
                     onChanged: (value) => updateSelectedSort(value),
@@ -278,11 +281,7 @@ class OrderProvider extends ChangeNotifier {
                           provider.sortOrders();
                           Navigator.of(context).pop();
                         },
-                        child: Text('Save',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(color: Colors.white))),
+                        child: const Text('Save', style: AppTheme.saveBtn)),
                   ),
                 )
               ],
@@ -306,50 +305,32 @@ class OrderProvider extends ChangeNotifier {
                 color: Colors.white, borderRadius: BorderRadius.circular(20)),
             child: SingleChildScrollView(
               child: Column(
-                 mainAxisSize: MainAxisSize.max,
+                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Filter',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayMedium!
-                              .copyWith(fontWeight: FontWeight.w900)),
+                      const Text('Filter', style: AppTheme.filterHead),
                       TextButton(
                           onPressed: () {
                             provider.resetFilter();
                           },
-                          child: Text('Clear',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displaySmall!
-                                  .copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).primaryColor,
-                                  ))),
+                          child: const Text('Clear', style: AppTheme.clearBtn)),
                     ],
                   ),
                   const SizedBox(height: 10),
-                  Text('Order Status',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displaySmall!
-                          .copyWith(fontWeight: FontWeight.w900)),
+                  const Text('Order Status', style: AppTheme.orderStatusHead),
                   Transform.translate(
                     offset: const Offset(-8, 0),
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('Pending',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('Pending',
+                            style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'pending',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -360,14 +341,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('preparing',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('preparing',
+                            style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'preparing',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -378,14 +356,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('Ready',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('Ready',
+                            style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'Ready',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -396,14 +371,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('Completed',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('Completed',
+                            style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'Completed',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -414,14 +386,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('Canceled',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('Canceled',
+                            style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'Canceled',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
@@ -430,28 +399,19 @@ class OrderProvider extends ChangeNotifier {
                   // const SizedBox(height: 10),
                   Transform.translate(
                     offset: const Offset(4, -50),
-                    child: Text('Payment method',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displaySmall!
-                            .copyWith(fontWeight: FontWeight.w900)),
+                    child: const Text('Payment method',
+                        style: AppTheme.paymentMethodHead),
                   ),
                   Transform.translate(
                     offset: const Offset(-8, -55),
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('CASH',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                    height: 1,
-                                    fontSize: 16,
-                                    color: Colors.grey[500])),
+                        child: const Text('CASH',
+                            style: AppTheme.customOrderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'CASH',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -462,17 +422,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('CREDIT_CARD',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(
-                                    height: 1,
-                                    fontSize: 16,
-                                    color: Colors.grey[500])),
+                        child: const Text('CREDIT_CARD',
+                            style: AppTheme.customOrderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'CREDIT_CARD',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -483,14 +437,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('MADA',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('MADA',
+                            style: AppTheme.paymentMethodTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'MADA',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -501,14 +452,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('APPLE',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('APPLE',
+                            style: AppTheme.paymentMethodTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'APPLE',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -519,14 +467,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('PORTAL',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('PORTAL',
+                            style: AppTheme.paymentMethodTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'PORTAL',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -537,14 +482,11 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: Text('WALLET',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium!
-                                .copyWith(fontSize: 16, color: Colors.grey[500])),
+                        child: const Text('WALLET',
+                            style: AppTheme.paymentMethodTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
-                      fillColor: MaterialStateProperty.all(Colors.grey),
+                      fillColor: WidgetStateProperty.all(Colors.grey),
                       value: 'WALLET',
                       groupValue: provider.selectedFilterPayment,
                       onChanged: (value) => updateSelectedFilterPayment(value),
@@ -565,11 +507,7 @@ class OrderProvider extends ChangeNotifier {
                             sortOrders();
                             Navigator.of(context).pop();
                           },
-                          child: Text('Save',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium!
-                                  .copyWith(color: Colors.white))),
+                          child: const Text('Save', style: AppTheme.saveBtn)),
                     ),
                   )
                 ],
