@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Manager manager = Manager();
+    HomeManager manager = HomeManager(context: context);
     return SafeArea(
       child: Scaffold(
           appBar: const HomeAppBar(),
@@ -24,17 +24,24 @@ class HomeScreen extends StatelessWidget {
               const Heading(title: AppText.homeTitle),
               const SizedBox(height: 5),
               FutureBuilder(
-                future: manager.loadOrders(context),
+                future: manager.getOrders(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
-                      child:  CircularProgressIndicator(
+                      child: CircularProgressIndicator(
                           backgroundColor: AppColors.primaryColor),
                     );
                   } else if (snapshot.hasError) {
-                    return Text('Error ${snapshot.error}',style: AppTheme.errorText,);
-                  } 
-                   return OrderList(orders: manager.orders);
+                    return Text('Error ${snapshot.error}',
+                        style: AppTheme.errorText);
+                  } else if (snapshot.hasData) {
+                    return OrderList(orders: manager.orders!);
+                  } else {
+                    return const Text(
+                      'No orders found',
+                      style: AppTheme.errorText,
+                    );
+                  }
                 },
               ),
             ],
@@ -42,9 +49,8 @@ class HomeScreen extends StatelessWidget {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
           floatingActionButton: SortFilter(
-              onSortPressed: () => manager.showBottomSheetForSort(context),
-              onFilterPressed: () =>
-                  manager.showBottomSheetForFilter(context))),
+              onSortPressed: () => manager.showBottomSheetForSort(),
+              onFilterPressed: () => manager.showBottomSheetForFilter())),
     );
   }
 }

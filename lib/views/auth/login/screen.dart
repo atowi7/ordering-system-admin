@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
-import 'package:ordering_system_admin/providers/user_provider.dart';
+import 'package:ordering_system_admin/providers/auth_provider.dart';
+import 'package:ordering_system_admin/views/auth/login/manager/manager.dart';
 import 'package:ordering_system_admin/views/auth/login/widgets/custombutton.dart';
 import 'package:ordering_system_admin/views/auth/login/widgets/logo.dart';
 import 'package:ordering_system_admin/views/auth/login/widgets/customtextfield.dart';
@@ -12,12 +13,12 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
+    AuthManager authManager = AuthManager(context);
     return SafeArea(
         child: Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Form(
-          key: userProvider.loginFormKey,
+          key: authManager.authProvider.loginFormKey,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: SingleChildScrollView(
@@ -27,32 +28,37 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(height: MediaQuery.of(context).size.height * 0.08),
                   const Logo(),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                 const Align(
+                  const Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Log in',
-                        style:
-                            AppTheme.loginHead),
+                    child: Text('Log in', style: AppTheme.loginHead),
                   ),
                   const SizedBox(height: 25),
                   CustomTextField(
                     label: 'User name',
                     hint: "Fx: golyv",
                     obscureText: false,
-                    controller: userProvider.emailController,
-                    validator: (value) => userProvider.validateName(value),
+                    controller: authManager.authProvider.emailController,
+                    validator: (value) =>
+                        authManager.authProvider.validateName(value),
                   ),
                   const SizedBox(height: 16),
                   CustomTextField(
                     label: 'Password',
                     hint: "•••••••••••••",
                     obscureText: true,
-                    controller: userProvider.passwordController,
-                    validator: (value) => userProvider.validateName(value),
+                    controller: authManager.authProvider.passwordController,
+                    validator: (value) =>
+                        authManager.authProvider.validateName(value),
                   ),
                   const SizedBox(height: 16),
-                  userProvider.isLoading
+                  authManager.authProvider.isLoading
                       ? const Center(child: CircularProgressIndicator())
-                      : const CustomButton(text: 'Sign in')
+                      : CustomButton(
+                          text: 'Sign in',
+                          login: () {
+                            authManager.login();
+                          },
+                        )
                 ],
               ),
             ),
@@ -61,8 +67,8 @@ class LoginScreen extends StatelessWidget {
   }
 }
  // TextFormField(
-                  //   controller: userProvider.emailController,
-                  //   validator: (value) => userProvider.validateName(value),
+                  //   controller: authProvider.emailController,
+                  //   validator: (value) => authProvider.validateName(value),
                   //   decoration: InputDecoration(
                   //       prefixIcon: Container(
                   //           margin: const EdgeInsets.all(5),
@@ -74,7 +80,7 @@ class LoginScreen extends StatelessWidget {
                   //             color: Colors.white,
                   //           )),
                   //       hintStyle: Theme.of(context).textTheme.displayMedium,
-                  //       labelText: "User name",
+                  //       labelText: "Auth name",
                   //        labelStyle: Theme.of(context)
                   //           .textTheme
                   //           .displayMedium!
@@ -91,8 +97,8 @@ class LoginScreen extends StatelessWidget {
                   // ),
 
 // TextFormField(
-                  //   controller: userProvider.passwordController,
-                  //   validator: (value) => userProvider.validatePassword(value),
+                  //   controller: authProvider.passwordController,
+                  //   validator: (value) => authProvider.validatePassword(value),
                   //   decoration: InputDecoration(
                   //     prefixIcon: Container(
                   //         margin: const EdgeInsets.all(5),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
+import 'package:ordering_system_admin/views/home/manager/manager.dart';
 import 'package:ordering_system_admin/views/home/widgets/orderitem.dart';
 
 class OrderList extends StatelessWidget {
@@ -8,6 +9,7 @@ class OrderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomeManager manager = HomeManager(context: context);
     return Expanded(
       child: ListView.builder(
         // shrinkWrap: true,
@@ -16,7 +18,12 @@ class OrderList extends StatelessWidget {
           final order = orders[index];
           return Column(
             children: [
-              OrderItem(order: order),
+              OrderItem(
+                order: order,
+                onShowChangeOrderStatusDialog: () {
+                  manager.showChangeOrderStatusDialog(order.id);
+                },
+              ),
               const Divider(
                 color: Colors.black,
                 thickness: 0.4,

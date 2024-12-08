@@ -22,15 +22,17 @@ class OrderDetailScreen extends StatelessWidget {
             children: [
               const Appbar(),
               CustomProgress(order: order),
-              CustomItem(title: 'Order id', text: order.id),
-              CustomItem(title: 'Pickup branch', text: order.branch),
+              CustomItem(title: 'Order id', text: '${order.id}'),
+              CustomItem(title: 'Pickup branch', text: order.branch['address']),
               CustomItem(title: 'Payment method', text: order.paymentMethod),
-              CustomItem(title: 'Pickup date & time', text: order.date),
+              CustomItem(
+                  title: 'Pickup date & time',
+                  text: order.branch['max_delivery_time']),
               Recite(order: order),
               TaxRecite(
                 viewDoc: () {},
               ),
-              CustomItem(title: 'Meals', text: 'Meals ${order.mealnum}'),
+              CustomItem(title: 'Meals', text: 'Meals ${order.items['name']}'),
             ],
           ),
         ),

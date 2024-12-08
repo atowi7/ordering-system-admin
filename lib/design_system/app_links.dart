@@ -12,8 +12,7 @@ class AppLinks {
   static const logout = '$baseUrl/logout';
 
   //order
-  static const orderList = '$baseUrl/orders';
-  static const orderDetails = '$baseUrl/orders';
+  static const orders = '$baseUrl/orders';
   static const orderStatusUpdate = '$baseUrl/orders/update-status';
   static const orderStatuses = '$baseUrl/order/statuses';
 }

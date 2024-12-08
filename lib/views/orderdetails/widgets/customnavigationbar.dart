@@ -31,7 +31,7 @@ class CustomNavigationBar extends StatelessWidget {
                     width: 60,
                     height: 30,
                     child: Image.network(
-                      AppLinks.meal,
+                     order.items['thumbnail'],
                       scale: 15,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
@@ -46,7 +46,7 @@ class CustomNavigationBar extends StatelessWidget {
                     ),
                   )),
               const SizedBox(width: 20),
-              Text(order.mealname, style: AppTheme.navigationBarTitle),
+              Text(order.items['name'], style: AppTheme.navigationBarTitle),
             ],
           ),
           const SizedBox(height: 10),

@@ -4,17 +4,15 @@ import 'package:ordering_system_admin/design_system/app_themes.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
-  const CustomButton({super.key, required this.text});
+  final  VoidCallback login;
+  const CustomButton({super.key, required this.text, required this.login});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          //  await userProvider.login();
-          Navigator.pushReplacementNamed(context, AppRoutes.home);
-        },
+        onPressed: login,
         style: ElevatedButton.styleFrom(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),

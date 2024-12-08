@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "57222298515",
+    "project_id": "instakit-4d603",
+    "storage_bucket": "instakit-4d603.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57222298515:android:a8cfd87797daeee560c666",
+        "android_client_info": {
+          "package_name": "com.atowi7.instakit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7UIarAk1my8pHY5UQdAxCo1_74b4aK38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

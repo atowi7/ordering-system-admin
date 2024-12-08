@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/customseparator.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/customstatus.dart';
-import 'package:provider/provider.dart';
 
 class CustomProgress extends StatelessWidget {
   final OrderModel order;
@@ -28,38 +26,36 @@ class CustomProgress extends StatelessWidget {
                 style: AppTheme.orderStatusProgressHead),
           ),
           const SizedBox(height: 8),
-          Consumer<OrderProvider>(builder: (context, provider, child) {
-            return Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                CustomStatus(
-                    context: context,
-                    title: 'Pending',
-                    currentStatus: order.status!),
-                const CustomSeparator(),
-                const CustomSeparator(),
-                const CustomSeparator(),
-                CustomStatus(
-                    context: context,
-                    title: 'Preparing',
-                    currentStatus: order.status!),
-                const CustomSeparator(),
-                const CustomSeparator(),
-                const CustomSeparator(),
-                CustomStatus(
-                    context: context,
-                    title: 'Ready for pickup',
-                    currentStatus: order.status!),
-                const CustomSeparator(),
-                const CustomSeparator(),
-                const CustomSeparator(),
-                CustomStatus(
-                    context: context,
-                    title: 'Pick up',
-                    currentStatus: order.status!),
-              ],
-            );
-          })
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CustomStatus(
+                  context: context,
+                  title: 'Pending',
+                  currentStatus: order.status!),
+              const CustomSeparator(),
+              const CustomSeparator(),
+              const CustomSeparator(),
+              CustomStatus(
+                  context: context,
+                  title: 'Preparing',
+                  currentStatus: order.status!),
+              const CustomSeparator(),
+              const CustomSeparator(),
+              const CustomSeparator(),
+              CustomStatus(
+                  context: context,
+                  title: 'Ready for pickup',
+                  currentStatus: order.status!),
+              const CustomSeparator(),
+              const CustomSeparator(),
+              const CustomSeparator(),
+              CustomStatus(
+                  context: context,
+                  title: 'Pick up',
+                  currentStatus: order.status!),
+            ],
+          ),
         ],
       ),
     );

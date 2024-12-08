@@ -6,47 +6,53 @@ import 'package:http/http.dart' as http;
 
 class OrderService {
   Future<List<OrderModel>?> getOrders() async {
-    final response = await http.get(Uri.parse(AppLinks.orderList));
+    final response = await http.get(Uri.parse(AppLinks.orders));
 
     if (response.statusCode == 200) {
-      List<dynamic> date = jsonDecode(response.body);
-      return date.map((order) => OrderModel.fromJson(order)).toList();
+      final Map<String, dynamic> jsonData = jsonDecode(response.body);
+      final List<dynamic> ordersData = jsonData['data']['orders'];
+      return ordersData
+          .map((orderJson) => OrderModel.fromJson(orderJson))
+          .toList();
     } else {
       return null;
     }
   }
 
-  Future<List<OrderModel>?> getOrderDetials() async {
+  Future<List<Map<String, int>>?> getOrderStatuses() async {
     final response = await http.get(
-      Uri.parse(AppLinks.orderDetails),
+      Uri.parse(AppLinks.orderStatuses),
     );
-
     if (response.statusCode == 200) {
-      List<dynamic> date = jsonDecode(response.body);
-      return date.map((order) => OrderModel.fromJson(order)).toList();
+      final Map<String, dynamic> date = jsonDecode(response.body);
+      final List<Map<String, int>> statues = date['data'];
+      return statues;
     } else {
       return null;
     }
   }
 
-  Future<void> upadateOrderStatus(String orderId) async {
+  // Future<OrderModel?> getOrderDetials(int orderId) async {
+  //   final response = await http.get(
+  //     Uri.parse('${AppLinks.orders}?$orderId'),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     final date = jsonDecode(response.body);
+  //     return OrderModel.fromJson(date);
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+  Future<bool> upadateOrderStatus(int orderId, String newStatus) async {
     final response = await http.post(Uri.parse(AppLinks.orderStatusUpdate),
-        body: {'orderid': orderId});
+        body: {"order_id": orderId, "new_status": newStatus});
 
     if (response.statusCode == 200) {
-      final date = jsonDecode(response.body);
-    } else {}
-  }
-
-  Future<List<String>?> getOrderStatuses() async {
-    final response = await http.get(
-      Uri.parse(AppLinks.orderDetails),
-    );
-    if (response.statusCode == 200) {
-      List<String> date = jsonDecode(response.body);
-      return date;
+      return true;
     } else {
-      return null;
+      return false;
     }
   }
 }

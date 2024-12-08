@@ -2,151 +2,165 @@ import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
 import 'package:ordering_system_admin/services/order_service.dart';
+import 'package:ordering_system_admin/views/home/widgets/changeorderstatus_dialog.dart';
 import 'package:provider/provider.dart';
 
 class OrderProvider extends ChangeNotifier {
-  List<OrderModel> _orders = [
-    OrderModel(
-        id: '101010',
-        username: 'Atowi',
-        phoneNumber: '+966555555555',
-        branch: 'Madinah',
-        paymentMethod: 'cash',
-        service: 'Pickup',
-        price: '28.5',
-        vat: '1.5',
-        mealname: 'Solo Light Meal - Meat Awsal',
-        mealnum: '2',
-        mealImage:
-            'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-        status: 'Preparing',
-        date: '2024-11-1 23:22:00'),
-    OrderModel(
-        id: '101010',
-        username: 'Atowi',
-        phoneNumber: '+966555555555',
-        branch: 'Madinah',
-        paymentMethod: 'cash',
-        service: 'Pickup',
-        price: '28.5',
-        vat: '1.5',
-        mealname: 'Solo Light Meal - Meat Awsal',
-        mealnum: '2',
-        mealImage:
-            'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-        status: 'Preparing',
-        date: '2024-11-2 23:22:00'),
-    OrderModel(
-        id: '101010',
-        username: 'Atowi',
-        phoneNumber: '+966555555555',
-        branch: 'Madinah',
-        paymentMethod: 'cash',
-        service: 'Pickup',
-        price: '28.5',
-        vat: '1.5',
-        mealname: 'Solo Light Meal - Meat Awsal',
-        mealnum: '2',
-        mealImage:
-            'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-        status: 'Preparing',
-        date: '2024-11-3 23:22:00'),
-    OrderModel(
-        id: '101010',
-        username: 'Atowi',
-        phoneNumber: '+966555555555',
-        branch: 'Madinah',
-        paymentMethod: 'cash',
-        service: 'Pickup',
-        price: '28.5',
-        vat: '1.5',
-        mealname: 'Solo Light Meal - Meat Awsal',
-        mealnum: '2',
-        mealImage:
-            'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-        status: 'Preparing',
-        date: '2024-11-4 23:22:00'),
-    OrderModel(
-        id: '101010',
-        username: 'Atowi',
-        phoneNumber: '+966555555555',
-        branch: 'Madinah',
-        paymentMethod: 'cash',
-        service: 'Pickup',
-        price: '28.5',
-        vat: '1.5',
-        mealname: 'Solo Light Meal - Meat Awsal',
-        mealnum: '2',
-        mealImage:
-            'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-        status: 'Preparing',
-        date: '2024-11-5 23:22:00'),
-    OrderModel(
-        id: '101010',
-        username: 'Atowi',
-        phoneNumber: '+966555555555',
-        branch: 'Madinah',
-        paymentMethod: 'cash',
-        service: 'Pickup',
-        price: '28.5',
-        vat: '1.5',
-        mealname: 'Solo Light Meal - Meat Awsal',
-        mealnum: '2',
-        mealImage:
-            'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-        status: 'Preparing',
-        date: '2024-11-6 23:22:00'),
+  OrderModel? _order;
+  List<OrderModel>? _orders = [
+    // OrderModel(
+    //     id: '101010',
+    //     username: 'Atowi',
+    //     phoneNumber: '+966555555555',
+    //     branch: 'Madinah',
+    //     paymentMethod: 'cash',
+    //     service: 'Pickup',
+    //     price: '28.5',
+    //     vat: '1.5',
+    //     mealname: 'Solo Light Meal - Meat Awsal',
+    //     mealnum: '2',
+    //     mealImage:
+    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
+    //     status: 'Preparing',
+    //     date: '2024-11-1 23:22:00'),
+    // OrderModel(
+    //     id: '101010',
+    //     username: 'Atowi',
+    //     phoneNumber: '+966555555555',
+    //     branch: 'Madinah',
+    //     paymentMethod: 'cash',
+    //     service: 'Pickup',
+    //     price: '28.5',
+    //     vat: '1.5',
+    //     mealname: 'Solo Light Meal - Meat Awsal',
+    //     mealnum: '2',
+    //     mealImage:
+    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
+    //     status: 'Preparing',
+    //     date: '2024-11-2 23:22:00'),
+    // OrderModel(
+    //     id: '101010',
+    //     username: 'Atowi',
+    //     phoneNumber: '+966555555555',
+    //     branch: 'Madinah',
+    //     paymentMethod: 'cash',
+    //     service: 'Pickup',
+    //     price: '28.5',
+    //     vat: '1.5',
+    //     mealname: 'Solo Light Meal - Meat Awsal',
+    //     mealnum: '2',
+    //     mealImage:
+    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
+    //     status: 'Preparing',
+    //     date: '2024-11-3 23:22:00'),
+    // OrderModel(
+    //     id: '101010',
+    //     username: 'Atowi',
+    //     phoneNumber: '+966555555555',
+    //     branch: 'Madinah',
+    //     paymentMethod: 'cash',
+    //     service: 'Pickup',
+    //     price: '28.5',
+    //     vat: '1.5',
+    //     mealname: 'Solo Light Meal - Meat Awsal',
+    //     mealnum: '2',
+    //     mealImage:
+    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
+    //     status: 'Preparing',
+    //     date: '2024-11-4 23:22:00'),
+    // OrderModel(
+    //     id: '101010',
+    //     username: 'Atowi',
+    //     phoneNumber: '+966555555555',
+    //     branch: 'Madinah',
+    //     paymentMethod: 'cash',
+    //     service: 'Pickup',
+    //     price: '28.5',
+    //     vat: '1.5',
+    //     mealname: 'Solo Light Meal - Meat Awsal',
+    //     mealnum: '2',
+    //     mealImage:
+    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
+    //     status: 'Preparing',
+    //     date: '2024-11-5 23:22:00'),
+    // OrderModel(
+    //     id: '101010',
+    //     username: 'Atowi',
+    //     phoneNumber: '+966555555555',
+    //     branch: 'Madinah',
+    //     paymentMethod: 'cash',
+    //     service: 'Pickup',
+    //     price: '28.5',
+    //     vat: '1.5',
+    //     mealname: 'Solo Light Meal - Meat Awsal',
+    //     mealnum: '2',
+    //     mealImage:
+    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
+    //     status: 'Preparing',
+    //     date: '2024-11-6 23:22:00'),
   ];
-  final List<String> _orderStatusList = [
-    'Pending',
-    'Preparing',
-    'Ready for pickup',
-    'pickup'
+  List<Map<String, int>>? _orderStatusList = [
+    // 'Pending',
+    // 'Preparing',
+    // 'Ready for pickup',
+    // 'pickup'
   ];
 
   final orderService = OrderService();
 
-  bool showStatusChangeDialog = false;
+  // bool showStatusChangeDialog = false;
   // String? _selectedOrderId;
   String? _selectedStatus;
   String? _selectedFilterStatus;
   String? _selectedFilterPayment;
   String? _selectedSort;
 
-  List<OrderModel> get orders => _orders;
-  List<String> get orderStatus => _orderStatusList;
+  OrderModel? get order => _order;
+  List<OrderModel>? get orders => _orders;
+  List<Map<String, int>>? get orderStatus => _orderStatusList;
+  // bool _isLoading = false;
   // String? get selectedOrderId => _selectedOrderId;
   String? get selectedStatus => _selectedStatus;
   String? get selectedFilterStatus => _selectedFilterStatus;
   String? get selectedFilterPayment => _selectedFilterPayment;
   String? get selectedSort => _selectedSort;
+  // bool get isLoading => _isLoading;
 
-  Future<List<OrderModel>> getOrders() async {
-    final orders = await orderService.getOrders();
-
-    if (orders != null) {
-      return orders;
-    } else {
-      return _orders;
+  Future<void> getOrders() async {
+    try {
+      _orders = await orderService.getOrders();
+      await getOrderStatuses();
+    } catch (e) {
+      print(e);
     }
+  }
+
+  // Future<void> getOrderDetails(int orderId) async {
+  //   try {
+  //     _order = await orderService.getOrderDetials(orderId);
+  //     await getOrderStatuses();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  Future<void> getOrderStatuses() async {
+    _orderStatusList = await orderService.getOrderStatuses();
   }
 
   void sortOrders() {
     if (_selectedSort == 'old_to_new') {
-      _orders.sort((a, b) => a.date.compareTo(b.date));
+      _orders!.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     } else if (_selectedSort == 'new_to_od') {
-      _orders.sort((a, b) => b.date.compareTo(a.date));
+      _orders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     }
-    notifyListeners();
   }
 
   void filterOrders() {
-    List<OrderModel> filterList = _orders.where((order) {
+    _orders!.where((order) {
       return order.status == _selectedFilterStatus ||
           order.paymentMethod == _selectedFilterPayment;
     }).toList();
-    _orders = filterList;
-    notifyListeners();
   }
 
   void resetSort() {
@@ -161,8 +175,22 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void showChangeOrderStatusDialog(String orderId) {
-    showStatusChangeDialog = true;
+  void showChangeOrderStatusDialog(BuildContext context, int orderId) {
+    // showStatusChangeDialog = true;
+
+    showDialog(
+      context: context,
+      builder: (context) =>
+          Consumer<OrderProvider>(builder: (context, provider, child) {
+        return ChangeOrderStatusDialog(
+            orderId: orderId,
+            selectedStatus: provider.selectedStatus,
+            onStatusUpdated: (newStatus) =>
+                provider.updateSelectedStatus(newStatus),
+            onStatusChanged: (newStatus) =>
+                provider.changeOrderStatus(orderId, newStatus));
+      }),
+    );
     notifyListeners();
   }
 
@@ -186,16 +214,26 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeOrderStatus(String? orderId, String? newStatus) {
-    final orderIndex = _orders.indexWhere((o) => o.id == orderId);
+  Future<String> changeOrderStatus(int orderId, String? newStatus) async {
+    final orderIndex = _orders!.indexWhere((o) => o.id == orderId);
     if (orderIndex != -1) {
-      _orders[orderIndex].status = newStatus;
-       orderService.upadateOrderStatus(orderId!);
+      _orders![orderIndex].status = newStatus;
 
-      _selectedStatus = null;
-      notifyListeners();
+      try {
+        bool isUpdated =
+            await orderService.upadateOrderStatus(orderId, newStatus!);
+
+        if (isUpdated) {
+          _selectedStatus = null;
+          notifyListeners();
+          return 'success';
+        }
+      } catch (e) {
+        return 'failed';
+      }
     }
-    showStatusChangeDialog = false;
+    // showStatusChangeDialog = false;
+    return 'failed';
   }
 
   int getStatusIndex(String status) {

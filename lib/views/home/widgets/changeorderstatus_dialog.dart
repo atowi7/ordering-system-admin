@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 
 class ChangeOrderStatusDialog extends StatelessWidget {
-  final String? orderId;
+  final int? orderId;
   final String? selectedStatus;
   final Function(String?) onStatusChanged;
   final Function(String) onStatusUpdated;

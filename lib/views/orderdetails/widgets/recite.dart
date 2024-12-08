@@ -31,7 +31,7 @@ class Recite extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '${order.price} ',
+                    '${order.prices['sub_total']} ',
                     style: AppTheme.orderDetailsReciteSubTotalPrice,
                   ),
                   const Text('SAR', style: AppTheme.orderDetailsReciteCurrency),
@@ -46,7 +46,7 @@ class Recite extends StatelessWidget {
               const Text('Vat', style: AppTheme.orderDetailsReciteVat),
               Row(
                 children: [
-                  Text('${order.vat} ',
+                  Text('${order.prices['vat_cost']} ',
                       style: AppTheme.orderDetailsReciteVatPrice),
                   const Text('SAR', style: AppTheme.orderDetailsReciteCurrency),
                 ],
@@ -61,7 +61,7 @@ class Recite extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                      '${double.parse(order.price) + double.parse(order.vat)} ',
+                      '${order.prices['total_price']}  ',
                       style: AppTheme.orderDetailsReciteTotalPrice),
                   const Text('SAR', style: AppTheme.orderDetailsReciteCurrency),
                 ],

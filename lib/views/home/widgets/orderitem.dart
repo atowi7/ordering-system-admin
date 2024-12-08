@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
-import 'package:ordering_system_admin/views/home/widgets/changeorderstatus_dialog.dart';
 import 'package:ordering_system_admin/views/orderdetails/screen.dart';
-import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderItem extends StatelessWidget {
   final OrderModel order;
-  const OrderItem({super.key, required this.order});
+  final VoidCallback onShowChangeOrderStatusDialog;
+  const OrderItem(
+      {super.key,
+      required this.order,
+      required this.onShowChangeOrderStatusDialog});
 
   @override
   Widget build(BuildContext context) {
-    // final orderProvider = Provider.of<OrderProvider>(context);
-
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -29,7 +29,7 @@ class OrderItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(order.id, style: AppTheme.orderItemId),
+                Text('$order.id', style: AppTheme.orderItemId),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -37,21 +37,7 @@ class OrderItem extends StatelessWidget {
                         style: AppTheme.orderItemPending),
                     const SizedBox(width: 5),
                     InkWell(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => Consumer<OrderProvider>(
-                              builder: (context, provider, child) {
-                            return ChangeOrderStatusDialog(
-                                orderId: order.id,
-                                selectedStatus: provider.selectedStatus,
-                                onStatusUpdated: (newStatus) =>
-                                    provider.updateSelectedStatus(newStatus),
-                                onStatusChanged: (newStatus) => provider
-                                    .changeOrderStatus(order.id, newStatus));
-                          }),
-                        );
-                      },
+                      onTap: onShowChangeOrderStatusDialog,
                       child:
                           const Text('Change', style: AppTheme.orderItemChange),
                     ),
@@ -64,21 +50,24 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Username', style: AppTheme.orderItemtitle),
-                Text(order.username, style: AppTheme.orderItemsubtitle),
+                Text(order.deliveryAddress['name'] ?? 'Not available',
+                    style: AppTheme.orderItemsubtitle),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Phone number', style: AppTheme.orderItemtitle),
-                Text(order.phoneNumber, style: AppTheme.orderItemsubtitle),
+                Text(order.deliveryAddress['phone'] ?? 'Not available',
+                    style: AppTheme.orderItemsubtitle),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Branch', style: AppTheme.orderItemtitle),
-                Text(order.branch, style: AppTheme.orderItemsubtitle),
+                Text(order.branch['address'],
+                    style: AppTheme.orderItemsubtitle),
               ],
             ),
             Row(
@@ -92,7 +81,7 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Service', style: AppTheme.orderItemtitle),
-                Text(order.service, style: AppTheme.orderItemsubtitle),
+                Text(order.serviceType, style: AppTheme.orderItemsubtitle),
               ],
             ),
             const SizedBox(height: 5),
@@ -105,7 +94,9 @@ class OrderItem extends StatelessWidget {
                 SizedBox(
                   height: 20,
                   child: TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await launchUrl(Uri.parse(order.invoiceLink));
+                    },
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                     ),
