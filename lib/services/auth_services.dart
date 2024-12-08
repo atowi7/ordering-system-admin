@@ -18,14 +18,14 @@ class AuthServices {
 
   Future<UserModel?> login(String email, String password) async {
     final String? token = await getDeviceToken();
-  
-    final response = await http.post(Uri.parse(AppLinks.login), body: {
+
+    final response = await http.post(Uri.parse(AppLinks.login), headers: {
+      'Authorization': AppLinks.token,
+    }, body: {
       'email': email,
       'password': password,
-      // 'token': token ?? 'null',
-      'token':
-          "dcaiAuPrfEaYphVdJ_q-H8:APA91bFC-BE8WrG9Ty9lbpF7Qs1aRE-zsdIkvYjABvcXZQTziduGeS-QAwaD9C5WgIYe8S5Q1JKjM_YheNod6_CjPOkf7SXF2x-1T7KMppGgTJS0hnO5djI9Zj39ZaOO5s3YGmwd4lhw1",
-      'device': '1'
+      'token': token ?? 'null',
+      'device': Platform.isAndroid ? '1' : '2'
     });
 
     if (response.statusCode == 200) {
@@ -38,7 +38,12 @@ class AuthServices {
   }
 
   Future<bool> logout() async {
-    final response = await http.post(Uri.parse(AppLinks.logout));
+    final response = await http.post(
+      Uri.parse(AppLinks.logout),
+      headers: {
+        'Authorization': AppLinks.token,
+      },
+    );
 
     if (response.statusCode == 200) {
       return true;

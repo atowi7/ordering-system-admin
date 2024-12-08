@@ -37,9 +37,11 @@ class HomeScreen extends StatelessWidget {
                   } else if (snapshot.hasData) {
                     return OrderList(orders: manager.orders!);
                   } else {
-                    return const Text(
-                      'No orders found',
-                      style: AppTheme.errorText,
+                    return const Center(
+                      child:  Text(
+                        'No orders found',
+                        style: AppTheme.errorText,
+                      ),
                     );
                   }
                 },

@@ -6,7 +6,12 @@ import 'package:http/http.dart' as http;
 
 class OrderService {
   Future<List<OrderModel>?> getOrders() async {
-    final response = await http.get(Uri.parse(AppLinks.orders));
+    final response = await http.get(
+      Uri.parse(AppLinks.orders),
+      headers: {
+        'Authorization': AppLinks.token,
+      },
+    );
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
@@ -46,8 +51,13 @@ class OrderService {
   // }
 
   Future<bool> upadateOrderStatus(int orderId, String newStatus) async {
-    final response = await http.post(Uri.parse(AppLinks.orderStatusUpdate),
-        body: {"order_id": orderId, "new_status": newStatus});
+    final response =
+        await http.post(Uri.parse(AppLinks.orderStatusUpdate), headers: {
+      'Authorization': AppLinks.token,
+    }, body: {
+      "order_id": orderId,
+      "new_status": newStatus
+    });
 
     if (response.statusCode == 200) {
       return true;

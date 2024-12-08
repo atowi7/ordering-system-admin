@@ -7,6 +7,9 @@ class AppLinks {
 
   //Base URL
   static const baseUrl = 'https://demo-testing.instakit.app/api/v1/admins';
+
+  //token
+  static const token = "9|9eUwIRlyrpToDhN48fswwOTHA6WaWXu3uA6M60Y0219f7a51"; 
   //auth
   static const login = '$baseUrl/login';
   static const logout = '$baseUrl/logout';
