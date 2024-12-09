@@ -1,14 +1,16 @@
+import 'package:intl/intl.dart';
+
 class OrderModel {
   final int id;
   String? status;
   final String paymentMethod;
   final String paymentStatus;
-  final Map<String, dynamic> branch;
+  final Map<String, dynamic>? branch;
   final String? notes;
-  final Map<String, dynamic> items;
-  final Map<String, dynamic> deliveryAddress;
-  final Map<String, dynamic> promoCode;
-  final Map<String, dynamic> prices;
+  final List<dynamic> items;
+  final Map<String, dynamic>? deliveryAddress;
+  final Map<String, dynamic>? promoCode;
+  final Map<String, dynamic>? prices;
   final String invoiceLink;
   final dynamic feedback;
   final String serviceType;
@@ -39,17 +41,25 @@ class OrderModel {
       status: json['status'] as String,
       paymentMethod: json['payment_method'] as String,
       paymentStatus: json['payment_status'] as String,
-      branch: json['branch'] as Map<String, dynamic>,
+      branch: json['branch'] != null
+          ? json['branch'] as Map<String, dynamic>
+          : null,
       notes: json['notes'] as String?,
-      items: json['items'] as Map<String, dynamic>,
-      deliveryAddress: json['delivery_address'] as Map<String, dynamic>,
-      promoCode: json['promo_code'] as Map<String, dynamic>,
-      prices: json['prices'] as Map<String, dynamic>,
+      items: json['items'] as List<dynamic>,
+      deliveryAddress: json['delivery_address'] != null
+          ? json['delivery_address'] as Map<String, dynamic>
+          : null,
+      promoCode: json['promo_code'] != null
+          ? json['promo_code'] as Map<String, dynamic>
+          : null,
+      prices: json['prices'] != null
+          ? json['prices'] as Map<String, dynamic>
+          : null,
       invoiceLink: json['invoice_link'] as String,
       feedback: json['feedback'],
       serviceType: json['service_type'] as String,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      createdAt: DateFormat('yyyy-MM-dd HH:mm:ss').parse(json['created_at']),
+      updatedAt: DateFormat('yyyy-MM-dd HH:mm:ss').parse(json['updated_at']),
     );
   }
 }

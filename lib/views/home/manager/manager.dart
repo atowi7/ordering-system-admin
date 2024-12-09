@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 class HomeManager {
   final BuildContext context;
   late List<OrderModel>? orders;
+  late List<Map<String, dynamic>>? orderStatusList =[];
   OrderProvider get _orderProvider =>
       Provider.of<OrderProvider>(context, listen: false);
 
@@ -14,6 +15,11 @@ class HomeManager {
   Future<void> getOrders() async {
     await _orderProvider.getOrders();
     orders = _orderProvider.orders;
+  }
+
+  Future<void> getOrderStatuses() async {
+    await _orderProvider.getOrderStatuses();
+    orderStatusList = _orderProvider.orderStatusList;
   }
 
   void sortOrders() {
@@ -54,10 +60,6 @@ class HomeManager {
 
   Future<void> changeOrderStatus(int orderId, String? newStatus) async {
     _orderProvider.changeOrderStatus(orderId, newStatus);
-  }
-
-  int getStatusIndex(String status) {
-    return _orderProvider.getStatusIndex(status);
   }
 
   void showBottomSheetForSort() {

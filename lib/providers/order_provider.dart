@@ -8,96 +8,94 @@ import 'package:provider/provider.dart';
 class OrderProvider extends ChangeNotifier {
   OrderModel? _order;
   List<OrderModel>? _orders = [
-    // OrderModel(
-    //     id: '101010',
-    //     username: 'Atowi',
-    //     phoneNumber: '+966555555555',
-    //     branch: 'Madinah',
-    //     paymentMethod: 'cash',
-    //     service: 'Pickup',
-    //     price: '28.5',
-    //     vat: '1.5',
-    //     mealname: 'Solo Light Meal - Meat Awsal',
-    //     mealnum: '2',
-    //     mealImage:
-    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-    //     status: 'Preparing',
-    //     date: '2024-11-1 23:22:00'),
-    // OrderModel(
-    //     id: '101010',
-    //     username: 'Atowi',
-    //     phoneNumber: '+966555555555',
-    //     branch: 'Madinah',
-    //     paymentMethod: 'cash',
-    //     service: 'Pickup',
-    //     price: '28.5',
-    //     vat: '1.5',
-    //     mealname: 'Solo Light Meal - Meat Awsal',
-    //     mealnum: '2',
-    //     mealImage:
-    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-    //     status: 'Preparing',
-    //     date: '2024-11-2 23:22:00'),
-    // OrderModel(
-    //     id: '101010',
-    //     username: 'Atowi',
-    //     phoneNumber: '+966555555555',
-    //     branch: 'Madinah',
-    //     paymentMethod: 'cash',
-    //     service: 'Pickup',
-    //     price: '28.5',
-    //     vat: '1.5',
-    //     mealname: 'Solo Light Meal - Meat Awsal',
-    //     mealnum: '2',
-    //     mealImage:
-    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-    //     status: 'Preparing',
-    //     date: '2024-11-3 23:22:00'),
-    // OrderModel(
-    //     id: '101010',
-    //     username: 'Atowi',
-    //     phoneNumber: '+966555555555',
-    //     branch: 'Madinah',
-    //     paymentMethod: 'cash',
-    //     service: 'Pickup',
-    //     price: '28.5',
-    //     vat: '1.5',
-    //     mealname: 'Solo Light Meal - Meat Awsal',
-    //     mealnum: '2',
-    //     mealImage:
-    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-    //     status: 'Preparing',
-    //     date: '2024-11-4 23:22:00'),
-    // OrderModel(
-    //     id: '101010',
-    //     username: 'Atowi',
-    //     phoneNumber: '+966555555555',
-    //     branch: 'Madinah',
-    //     paymentMethod: 'cash',
-    //     service: 'Pickup',
-    //     price: '28.5',
-    //     vat: '1.5',
-    //     mealname: 'Solo Light Meal - Meat Awsal',
-    //     mealnum: '2',
-    //     mealImage:
-    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-    //     status: 'Preparing',
-    //     date: '2024-11-5 23:22:00'),
-    // OrderModel(
-    //     id: '101010',
-    //     username: 'Atowi',
-    //     phoneNumber: '+966555555555',
-    //     branch: 'Madinah',
-    //     paymentMethod: 'cash',
-    //     service: 'Pickup',
-    //     price: '28.5',
-    //     vat: '1.5',
-    //     mealname: 'Solo Light Meal - Meat Awsal',
-    //     mealnum: '2',
-    //     mealImage:
-    //         'https://www.google.com/imgres?q=Solo%20Light%20Meal%20-%20Meat%20Awsal&imgurl=https%3A%2F%2Fdashboard-ennabi.golyv.co%2Fuploads%2Fimages%2Fproducts%2Ffede2b19-5548-449e-befa-3419b021917b.jpg&imgrefurl=https%3A%2F%2Fennabi.golyv.co%2Fcategories%2F16&docid=UvohPqj8AbbbjM&tbnid=MW9jJ237wkr8-M&vet=12ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA..i&w=512&h=512&hcb=2&ved=2ahUKEwiep868y-aJAxVgRKQEHYpPDX0QM3oECBUQAA',
-    //     status: 'Preparing',
-    //     date: '2024-11-6 23:22:00'),
+    OrderModel(
+      id: 1,
+      status: 'Pending',
+      paymentMethod: 'Cash on Delivery',
+      paymentStatus: 'Unpaid',
+      branch: {'name': 'Main Branch', 'address': '123 Main Street'},
+      items: [
+        {'Pizza': 2, 'Fries': 1}
+      ],
+      deliveryAddress: {'address': '456 Elm Street', 'phone': '123-456-7890'},
+      promoCode: {},
+      prices: {'subtotal': 19.99, 'tax': 1.99, 'total': 21.98},
+      invoiceLink: 'https://example.com/invoice/1',
+      serviceType: 'Delivery',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    OrderModel(
+      id: 2,
+      status: 'Completed',
+      paymentMethod: 'Credit Card',
+      paymentStatus: 'Paid',
+      branch: {'name': 'Branch 2', 'address': '789 Oak Street'},
+      items: [
+        {'Burger': 3, 'Soda': 2}
+      ],
+      deliveryAddress: {'address': '101 Pine Street', 'phone': '987-654-3210'},
+      promoCode: {'code': 'DISCOUNT10', 'discount': 10},
+      prices: {'subtotal': 25.99, 'tax': 2.59, 'total': 28.58},
+      invoiceLink: 'https://example.com/invoice/2',
+      serviceType: 'Pickup',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    OrderModel(
+      id: 3,
+      status: 'Preparing',
+      paymentMethod: 'Apple Pay',
+      paymentStatus: 'Paid',
+      branch: {'name': 'Main Branch', 'address': '123 Main Street'},
+      items: [
+        {'Salad': 1, 'Sandwich': 2}
+      ],
+      deliveryAddress: {'address': '543 Maple Street', 'phone': '555-555-5555'},
+      promoCode: {},
+      prices: {'subtotal': 15.99, 'tax': 1.59, 'total': 17.58},
+      invoiceLink: 'https://example.com/invoice/3',
+      serviceType: 'Delivery',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    OrderModel(
+      id: 4,
+      status: 'Out for Delivery',
+      paymentMethod: 'Cash on Delivery',
+      paymentStatus: 'Unpaid',
+      branch: {'name': 'Branch 2', 'address': '789 Oak Street'},
+      items: [
+        {'Pizza': 2, 'Fries': 1, 'Soda': 2}
+      ],
+      deliveryAddress: {'address': '234 Cedar Street', 'phone': '444-444-4444'},
+      promoCode: {},
+      prices: {'subtotal': 22.99, 'tax': 2.29, 'total': 25.28},
+      invoiceLink: 'https://example.com/invoice/4',
+      serviceType: 'Delivery',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
+    OrderModel(
+      id: 5,
+      status: 'Completed',
+      paymentMethod: 'Google Pay',
+      paymentStatus: 'Paid',
+      branch: {'name': 'Main Branch', 'address': '123 Main Street'},
+      items: [
+        {'Burger': 2, 'Fries': 1}
+      ],
+      deliveryAddress: {
+        'address': '678 Walnut Street',
+        'phone': '333-333-3333'
+      },
+      promoCode: {'code': 'DISCOUNT5', 'discount': 5},
+      prices: {'subtotal': 18.99, 'tax': 1.89, 'total': 20.88},
+      invoiceLink: 'https://example.com/invoice/5',
+      serviceType: 'Pickup',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    ),
   ];
   List<Map<String, dynamic>>? _orderStatusList = [
     // 'Pending',
@@ -117,7 +115,7 @@ class OrderProvider extends ChangeNotifier {
 
   OrderModel? get order => _order;
   List<OrderModel>? get orders => _orders;
-  List<Map<String, dynamic>>? get orderStatus => _orderStatusList;
+  List<Map<String, dynamic>>? get orderStatusList => _orderStatusList;
   // bool _isLoading = false;
   // String? get selectedOrderId => _selectedOrderId;
   String? get selectedStatus => _selectedStatus;
@@ -127,22 +125,22 @@ class OrderProvider extends ChangeNotifier {
   // bool get isLoading => _isLoading;
 
   Future<void> getOrders() async {
+    final fetchedOrders = await orderService.getOrders();
+    if (fetchedOrders != null || fetchedOrders!.isNotEmpty) {
+      _orders = fetchedOrders;
+    }
+  }
+
+  Future<void> getOrderDetails(int orderId) async {
     try {
-      _orders = await orderService.getOrders();
-      await getOrderStatuses();
+      final fetchedOrder = await orderService.getOrderDetails(orderId);
+      if (fetchedOrder != null) {
+        _order = fetchedOrder;
+      }
     } catch (e) {
       print(e);
     }
   }
-
-  // Future<void> getOrderDetails(int orderId) async {
-  //   try {
-  //     _order = await orderService.getOrderDetials(orderId);
-  //     await getOrderStatuses();
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
   Future<void> getOrderStatuses() async {
     _orderStatusList = await orderService.getOrderStatuses();
@@ -237,16 +235,12 @@ class OrderProvider extends ChangeNotifier {
   }
 
   int getStatusIndex(String status) {
-    switch (status) {
-      case 'Pending':
-        return 0;
-      case 'Preparing':
-        return 1;
-      case 'Ready for pickup':
-        return 2;
-      case 'Pick up':
-        return 3;
+    for (int i = 0; i < orderStatusList!.length; i++) {
+      if (orderStatusList![i]['name'] == status) {
+        return i;
+      }
     }
+
     return -1;
   }
 
@@ -364,12 +358,17 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: const Text('Pending',
+                        child: Text(
+                            _orderStatusList?.isNotEmpty ?? false
+                                ? _orderStatusList![0]['name']
+                                : 'Pending',
                             style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
                       fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'pending',
+                      value: _orderStatusList?.isNotEmpty ?? false
+                          ? _orderStatusList![0]['name']
+                          : 'Pending',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
                     ),
@@ -379,12 +378,17 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: const Text('preparing',
+                        child: Text(
+                            _orderStatusList?.isNotEmpty ?? false
+                                ? _orderStatusList![1]['name']
+                                : 'Preparing',
                             style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
                       fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'preparing',
+                      value: _orderStatusList?.isNotEmpty ?? false
+                          ? _orderStatusList![1]['name']
+                          : 'Preparing',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
                     ),
@@ -394,12 +398,17 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: const Text('Ready',
+                        child: Text(
+                            _orderStatusList?.isNotEmpty ?? false
+                                ? _orderStatusList![2]['name']
+                                : 'Ready For Pickup',
                             style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
                       fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'Ready',
+                      value: _orderStatusList?.isNotEmpty ?? false
+                          ? _orderStatusList![2]['name']
+                          : 'Ready For Pickup',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
                     ),
@@ -409,12 +418,17 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: const Text('Completed',
+                        child: Text(
+                            _orderStatusList?.isNotEmpty ?? false
+                                ? _orderStatusList![3]['name']
+                                : 'Out for Delivery',
                             style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
                       fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'Completed',
+                      value: _orderStatusList?.isNotEmpty ?? false
+                          ? _orderStatusList![3]['name']
+                          : 'Out for Delivery',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
                     ),
@@ -424,12 +438,37 @@ class OrderProvider extends ChangeNotifier {
                     child: RadioListTile<String>(
                       title: Transform.translate(
                         offset: const Offset(-16, 0),
-                        child: const Text('Canceled',
+                        child: Text(
+                            _orderStatusList?.isNotEmpty ?? false
+                                ? _orderStatusList![4]['name']
+                                : 'Completed',
                             style: AppTheme.orderStatusTitle),
                       ),
                       contentPadding: EdgeInsets.zero,
                       fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'Canceled',
+                      value: _orderStatusList?.isNotEmpty ?? false
+                          ? _orderStatusList![4]['name']
+                          : 'Completed',
+                      groupValue: provider.selectedFilterStatus,
+                      onChanged: (value) => updateSelectedFilterStatus(value),
+                    ),
+                  ),
+                  Transform.translate(
+                    offset: const Offset(-8, -75),
+                    child: RadioListTile<String>(
+                      title: Transform.translate(
+                        offset: const Offset(-16, 0),
+                        child: Text(
+                            _orderStatusList?.isNotEmpty ?? false
+                                ? _orderStatusList![5]['name']
+                                : 'Canceled',
+                            style: AppTheme.orderStatusTitle),
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                      fillColor: WidgetStateProperty.all(Colors.grey),
+                      value: _orderStatusList?.isNotEmpty ?? false
+                          ? _orderStatusList![5]['name']
+                          : 'Canceled',
                       groupValue: provider.selectedFilterStatus,
                       onChanged: (value) => updateSelectedFilterStatus(value),
                     ),

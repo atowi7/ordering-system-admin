@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:ordering_system_admin/views/orderdetails/manager/manager.dart';
 
 class CustomStatus extends StatelessWidget {
   final BuildContext context;
@@ -15,9 +14,9 @@ class CustomStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orderProvider = Provider.of<OrderProvider>(context, listen: false);
-    final isActive = orderProvider.getStatusIndex(title) <=
-        orderProvider.getStatusIndex(currentStatus);
+    OrderDetailsManager manager = OrderDetailsManager(context: context);
+    final isActive =
+        manager.getStatusIndex(title) <= manager.getStatusIndex(currentStatus);
     return Column(
       children: [
         Container(

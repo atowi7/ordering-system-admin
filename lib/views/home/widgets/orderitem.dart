@@ -17,7 +17,7 @@ class OrderItem extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => OrderDetailScreen(order: order)));
+            builder: (context) => OrderDetailScreen(orderId: order.id)));
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -29,7 +29,7 @@ class OrderItem extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('$order.id', style: AppTheme.orderItemId),
+                Text('${order.id}', style: AppTheme.orderItemId),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -50,7 +50,7 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Username', style: AppTheme.orderItemtitle),
-                Text(order.deliveryAddress['name'] ?? 'Not available',
+                Text(order.deliveryAddress?['name'] ?? 'Not available',
                     style: AppTheme.orderItemsubtitle),
               ],
             ),
@@ -58,7 +58,7 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Phone number', style: AppTheme.orderItemtitle),
-                Text(order.deliveryAddress['phone'] ?? 'Not available',
+                Text(order.deliveryAddress?['phone'] ?? 'Not avaliable',
                     style: AppTheme.orderItemsubtitle),
               ],
             ),
@@ -66,7 +66,7 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Branch', style: AppTheme.orderItemtitle),
-                Text(order.branch['address'],
+                Text(order.branch?['address'] ?? 'Not avaliable',
                     style: AppTheme.orderItemsubtitle),
               ],
             ),

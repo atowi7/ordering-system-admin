@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
-import 'package:ordering_system_admin/design_system/app_links.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
 
@@ -31,7 +30,7 @@ class CustomNavigationBar extends StatelessWidget {
                     width: 60,
                     height: 30,
                     child: Image.network(
-                     order.items['thumbnail'],
+                     order.items[0]['product']['thumbnail'],
                       scale: 15,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
@@ -46,7 +45,7 @@ class CustomNavigationBar extends StatelessWidget {
                     ),
                   )),
               const SizedBox(width: 20),
-              Text(order.items['name'], style: AppTheme.navigationBarTitle),
+              Text(order.items[0]['product']['name'], style: AppTheme.navigationBarTitle),
             ],
           ),
           const SizedBox(height: 10),

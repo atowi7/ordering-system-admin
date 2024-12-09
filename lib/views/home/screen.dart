@@ -32,18 +32,21 @@ class HomeScreen extends StatelessWidget {
                           backgroundColor: AppColors.primaryColor),
                     );
                   } else if (snapshot.hasError) {
+                    print(snapshot.error);
                     return Text('Error ${snapshot.error}',
                         style: AppTheme.errorText);
-                  } else if (snapshot.hasData) {
-                    return OrderList(orders: manager.orders!);
-                  } else {
-                    return const Center(
-                      child:  Text(
-                        'No orders found',
-                        style: AppTheme.errorText,
-                      ),
-                    );
-                  }
+                  } 
+                  // else if (!snapshot.hasData) {
+                  //   return const Center(
+                  //     child:  Text(
+                  //       'No orders found',
+                  //       style: AppTheme.errorText,
+                  //     ),
+                  //   );
+                  // } 
+                     return OrderList(orders: manager.orders!);
+                   
+                  
                 },
               ),
             ],

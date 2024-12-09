@@ -24,18 +24,50 @@ class OrderService {
 
       if (jsonData['success']) {
         List<dynamic> ordersData = jsonData['data']['orders'];
-        print(ordersData);
-        final List<OrderModel> orders = ordersData.map((orderJson) {
-          return OrderModel.fromJson(orderJson);
+        final List<OrderModel> orders = ordersData.map((order) {
+          // print('orderData$order');
+
+          return OrderModel.fromJson(order);
         }).toList();
 
         return orders;
+      } else {
+        return null;
       }
+    } else {
       return null;
+    }
+  }
 
-      // return ordersData
-      //     .map((orderJson) => OrderModel.fromJson(orderJson))
-      //     .toList();
+  Future<OrderModel?>? getOrderDetails(int orderId) async {
+    final token = await AuthServices.getToken();
+    if (token == null) {
+      return null;
+    }
+
+    final response = await http.get(
+      Uri.parse('${AppLinks.orders}/$orderId'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      try {
+         Map<String, dynamic> jsonData = jsonDecode(response.body);
+     
+      if (jsonData['success']) {
+        final orderData = jsonData['data'];
+        print('orderDetails $orderData');
+        final order = OrderModel.fromJson(orderData);
+
+        return order;
+      }
+      } catch (e) {
+        print(e);
+      }
+     
+      return null;
     } else {
       return null;
     }

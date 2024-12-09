@@ -1,42 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
-import 'package:ordering_system_admin/models/order_model.dart';
+import 'package:ordering_system_admin/design_system/app_themes.dart';
+import 'package:ordering_system_admin/views/orderdetails/manager/manager.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/appbar.dart';
-import 'package:ordering_system_admin/views/orderdetails/widgets/customnavigationbar.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/customrow.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/progress.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/recite.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/taxrecite.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailScreen extends StatelessWidget {
-  final OrderModel order;
-  const OrderDetailScreen({super.key, required this.order});
+  final int orderId;
+  const OrderDetailScreen({super.key, required this.orderId});
 
   @override
   Widget build(BuildContext context) {
+    OrderDetailsManager manager = OrderDetailsManager(context: context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Appbar(),
-              CustomProgress(order: order),
-              CustomItem(title: 'Order id', text: '${order.id}'),
-              CustomItem(title: 'Pickup branch', text: order.branch['address']),
-              CustomItem(title: 'Payment method', text: order.paymentMethod),
-              CustomItem(
-                  title: 'Pickup date & time',
-                  text: order.branch['max_delivery_time']),
-              Recite(order: order),
-              TaxRecite(
-                viewDoc: () {},
-              ),
-              CustomItem(title: 'Meals', text: 'Meals ${order.items['name']}'),
-            ],
-          ),
+          child: FutureBuilder(
+              future: manager.getOrderDetails(orderId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                        backgroundColor: AppColors.primaryColor),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('Error ${snapshot.error}',
+                      style: AppTheme.errorText);
+                } 
+                // else if (!snapshot.hasData) {
+                //   return const Center(
+                //     child: Text(
+                //       'No order found',
+                //       style: AppTheme.errorText,
+                //     ),
+                //   );
+                // }
+
+                return Column(
+                  children: [
+                    const Appbar(),
+                    CustomProgress(order: manager.order!),
+                    CustomItem(title: 'Order id', text: '${manager.order!.id}'),
+                    CustomItem(
+                        title: 'Pickup branch',
+                        text: manager.order!.branch?['address'] ??
+                            'Not available'),
+                    CustomItem(
+                        title: 'Payment method',
+                        text: manager.order!.paymentMethod),
+                    CustomItem(
+                        title: 'Pickup date & time',
+                        text: '${manager.order!.branch?['max_delivery_time']}'),
+                    Recite(order: manager.order!),
+                    TaxRecite(
+                      viewDoc:  () async {
+                      await launchUrl(Uri.parse(manager.order!.invoiceLink));
+                    },
+                    ),
+                    CustomItem(
+                        title: 'Meals',
+                        text:
+                            'Meals ${manager.order!.items[0]['product']['name']}'),
+                  ],
+                );
+              }),
         ),
-        bottomNavigationBar: CustomNavigationBar(order: order),
+        // bottomNavigationBar: FutureBuilder(
+        //     future: manager.getOrderDetails(orderId),
+        //     builder: (context, snapshot) {
+        //       if (snapshot.connectionState == ConnectionState.waiting) {
+        //         return const Center(
+        //           child: CircularProgressIndicator(
+        //               backgroundColor: AppColors.primaryColor),
+        //         );
+        //       } else if (snapshot.hasError) {
+        //         return const Text('');
+        //       } else if (snapshot.hasData) {
+        //         return CustomNavigationBar(order: manager.order!);
+        //       } else {
+        //         return const Center(
+        //           child: Text(''),
+        //         );
+        //       }
+        //     }),
       ),
     );
   }

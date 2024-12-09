@@ -59,7 +59,7 @@ class AppTheme {
   static const TextStyle orderItemsubtitle = TextStyle(
     fontWeight: FontWeight.w800,
     color: Color.fromRGBO(189, 189, 189, 1),
-    fontSize: 14,
+    fontSize: 13,
   );
   static const TextStyle orderItemsInvoice = TextStyle(
     height: 1,
@@ -138,12 +138,12 @@ class AppTheme {
     fontWeight: FontWeight.w900,
   );
   static const TextStyle orderDetailsOrderStatusTitleopt1 = TextStyle(
-    fontSize: 15,
+    fontSize: 8,
     fontWeight: FontWeight.w500,
     color: Colors.green,
   );
   static const TextStyle orderDetailsOrderStatusTitleopt2 = TextStyle(
-    fontSize: 15,
+    fontSize: 8,
     fontWeight: FontWeight.w500,
     color: Colors.grey,
   );
@@ -158,7 +158,7 @@ class AppTheme {
     fontWeight: FontWeight.w900,
   );
   static const TextStyle orderDetialsItemSubTitle = TextStyle(
-      fontSize: 15,
+      fontSize: 12,
       fontWeight: FontWeight.w500,
       color: Color.fromRGBO(117, 117, 117, 1));
   static const TextStyle orderDetailsReciteHead = TextStyle(
