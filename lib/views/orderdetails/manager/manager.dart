@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:ordering_system_admin/models/order_model.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
-import 'package:provider/provider.dart';
+
 
 class OrderDetailsManager {
   // final BuildContext context;

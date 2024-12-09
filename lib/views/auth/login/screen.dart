@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
-import 'package:ordering_system_admin/providers/auth_provider.dart';
 import 'package:ordering_system_admin/views/auth/login/manager/manager.dart';
 import 'package:ordering_system_admin/views/auth/login/widgets/custombutton.dart';
 import 'package:ordering_system_admin/views/auth/login/widgets/logo.dart';
 import 'package:ordering_system_admin/views/auth/login/widgets/customtextfield.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

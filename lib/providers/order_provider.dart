@@ -99,7 +99,7 @@ class OrderProvider extends ChangeNotifier {
     //     status: 'Preparing',
     //     date: '2024-11-6 23:22:00'),
   ];
-  List<Map<String, int>>? _orderStatusList = [
+  List<Map<String, dynamic>>? _orderStatusList = [
     // 'Pending',
     // 'Preparing',
     // 'Ready for pickup',
@@ -117,7 +117,7 @@ class OrderProvider extends ChangeNotifier {
 
   OrderModel? get order => _order;
   List<OrderModel>? get orders => _orders;
-  List<Map<String, int>>? get orderStatus => _orderStatusList;
+  List<Map<String, dynamic>>? get orderStatus => _orderStatusList;
   // bool _isLoading = false;
   // String? get selectedOrderId => _selectedOrderId;
   String? get selectedStatus => _selectedStatus;

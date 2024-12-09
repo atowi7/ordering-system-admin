@@ -47,23 +47,29 @@ class CustomTextField extends StatelessWidget {
               children: [
                 Transform.translate(
                   offset: const Offset(0, 8),
-                  child: Text(label,
-                      style:AppTheme.logintextFormLabel),
+                  child: Text(label, style: AppTheme.logintextFormLabel),
                 ),
                 TextFormField(
                   controller: controller,
                   validator: validator,
                   style: AppTheme.logintextFormtext,
                   decoration: InputDecoration(
-                    hintStyle:
-                       AppTheme.logintextFormHint,
+                    hintStyle: AppTheme.logintextFormHint,
                     hintText: hint,
                     focusedBorder: InputBorder.none,
+                    focusedErrorBorder: InputBorder.none,
                     enabledBorder: InputBorder.none,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    // contentPadding: EdgeInsets.zero,
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Colors.transparent,
+                        width: 0.0,
+                      ),
+                      // contentPadding: EdgeInsets.zero,
+                    ),
                   ),
                   obscureText: obscureText,
                   obscuringCharacter: obscureText ? '•' : ' ',
