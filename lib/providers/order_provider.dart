@@ -219,7 +219,7 @@ class OrderProvider extends ChangeNotifier {
 
       try {
         bool isUpdated =
-            await orderService.upadateOrderStatus(orderId, newStatus!);
+            await orderService.changeOrderStatus(orderId, newStatus!);
 
         if (isUpdated) {
           _selectedStatus = null;

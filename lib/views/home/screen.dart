@@ -32,7 +32,6 @@ class HomeScreen extends StatelessWidget {
                           backgroundColor: AppColors.primaryColor),
                     );
                   } else if (snapshot.hasError) {
-                    print(snapshot.error);
                     return Text('Error ${snapshot.error}',
                         style: AppTheme.errorText);
                   } 

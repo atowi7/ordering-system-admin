@@ -20,6 +20,7 @@ class HomeManager {
   Future<void> getOrderStatuses() async {
     await _orderProvider.getOrderStatuses();
     orderStatusList = _orderProvider.orderStatusList;
+    print('orderStatusList $orderStatusList');
   }
 
   void sortOrders() {

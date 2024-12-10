@@ -25,7 +25,7 @@ class OrderService {
       if (jsonData['success']) {
         List<dynamic> ordersData = jsonData['data']['orders'];
         final List<OrderModel> orders = ordersData.map((order) {
-          // print('orderData$order');
+          print('orderData$order');
 
           return OrderModel.fromJson(order);
         }).toList();
@@ -54,19 +54,19 @@ class OrderService {
 
     if (response.statusCode == 200) {
       try {
-         Map<String, dynamic> jsonData = jsonDecode(response.body);
-     
-      if (jsonData['success']) {
-        final orderData = jsonData['data'];
-        print('orderDetails $orderData');
-        final order = OrderModel.fromJson(orderData);
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
 
-        return order;
-      }
+        if (jsonData['success']) {
+          final orderData = jsonData['data'];
+          print('orderDetails $orderData');
+          final order = OrderModel.fromJson(orderData);
+
+          return order;
+        }
       } catch (e) {
         print(e);
       }
-     
+
       return null;
     } else {
       return null;
@@ -85,7 +85,7 @@ class OrderService {
         return item.map((key, value) => MapEntry(key, value));
       }).toList();
 
-      print(statuses);
+      print('statuses $statuses');
 
       return statuses;
     } else {
@@ -106,7 +106,7 @@ class OrderService {
   //   }
   // }
 
-  Future<bool> upadateOrderStatus(int orderId, String newStatus) async {
+  Future<bool> changeOrderStatus(int orderId, String newStatus) async {
     final token = await AuthServices.getToken();
     if (token == null) {
       return false;

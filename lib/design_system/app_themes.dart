@@ -211,10 +211,15 @@ class AppTheme {
     fontWeight: FontWeight.w500,
     color: Color.fromRGBO(117, 117, 117, 1),
   );
-  static const TextStyle errorText = TextStyle(
-    fontSize: 28,
+  static const TextStyle successText = TextStyle(
+    fontSize: 14,
     fontWeight: FontWeight.w900,
-    color: AppColors.primaryColor,
+    color: Colors.green,
+  );
+  static const TextStyle errorText = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w900,
+    color: Colors.red,
   );
 }
 

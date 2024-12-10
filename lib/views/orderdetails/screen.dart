@@ -3,6 +3,7 @@ import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/views/orderdetails/manager/manager.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/appbar.dart';
+import 'package:ordering_system_admin/views/orderdetails/widgets/customnavigationbar.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/customrow.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/progress.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/recite.dart';
@@ -31,7 +32,7 @@ class OrderDetailScreen extends StatelessWidget {
                 } else if (snapshot.hasError) {
                   return Text('Error ${snapshot.error}',
                       style: AppTheme.errorText);
-                } 
+                }
                 // else if (!snapshot.hasData) {
                 //   return const Center(
                 //     child: Text(
@@ -58,9 +59,9 @@ class OrderDetailScreen extends StatelessWidget {
                         text: '${manager.order!.branch?['max_delivery_time']}'),
                     Recite(order: manager.order!),
                     TaxRecite(
-                      viewDoc:  () async {
-                      await launchUrl(Uri.parse(manager.order!.invoiceLink));
-                    },
+                      viewDoc: () async {
+                        await launchUrl(Uri.parse(manager.order!.invoiceLink));
+                      },
                     ),
                     CustomItem(
                         title: 'Meals',
@@ -70,24 +71,24 @@ class OrderDetailScreen extends StatelessWidget {
                 );
               }),
         ),
-        // bottomNavigationBar: FutureBuilder(
-        //     future: manager.getOrderDetails(orderId),
-        //     builder: (context, snapshot) {
-        //       if (snapshot.connectionState == ConnectionState.waiting) {
-        //         return const Center(
-        //           child: CircularProgressIndicator(
-        //               backgroundColor: AppColors.primaryColor),
-        //         );
-        //       } else if (snapshot.hasError) {
-        //         return const Text('');
-        //       } else if (snapshot.hasData) {
-        //         return CustomNavigationBar(order: manager.order!);
-        //       } else {
-        //         return const Center(
-        //           child: Text(''),
-        //         );
-        //       }
-        //     }),
+        bottomNavigationBar: FutureBuilder(
+            future: manager.getOrderDetails(orderId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                      backgroundColor: AppColors.primaryColor),
+                );
+              } else if (snapshot.hasError) {
+                return const Text('Error');
+              }
+              return CustomNavigationBar(
+                order: manager.order!,
+                onChangeStatus: () {
+                  manager.changeOrderStatus(orderId);
+                },
+              );
+            }),
       ),
     );
   }
