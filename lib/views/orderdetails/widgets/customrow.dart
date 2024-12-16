@@ -20,7 +20,7 @@ class CustomItem extends StatelessWidget {
             title,
             style: AppTheme.orderDetialsItemTitle,
           ),
-          Text(text, style: AppTheme.orderDetialsItemSubTitle),
+          Text(text.length > 40 ? '${text.substring(0, 40)}...' : text, style: AppTheme.orderDetialsItemSubTitle),
         ],
       ),
     );

@@ -14,7 +14,7 @@ class AuthServices {
   Future<String?> getDeviceToken() async {
     await _firebaseMessaging.requestPermission();
     String? token = await _firebaseMessaging.getToken();
-    print(token);
+    // print(token);
     return token;
   }
 
@@ -43,11 +43,11 @@ class AuthServices {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final String token = data['data']['authorization']['token'];
-      print('auth $token');
+      // print('auth $token');
       await _storeToken(token);
       return UserModel.fromJson(data['data']['admin']);
     } else {
-      print('failed');
+      // print('failed');
       return null;
     }
   }

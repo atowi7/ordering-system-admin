@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
+import 'package:ordering_system_admin/design_system/app_images.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
+import 'package:ordering_system_admin/providers/order_provider.dart';
 import 'package:ordering_system_admin/views/orderdetails/manager/manager.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/appbar.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/customnavigationbar.dart';
@@ -8,6 +11,7 @@ import 'package:ordering_system_admin/views/orderdetails/widgets/customrow.dart'
 import 'package:ordering_system_admin/views/orderdetails/widgets/progress.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/recite.dart';
 import 'package:ordering_system_admin/views/orderdetails/widgets/taxrecite.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OrderDetailScreen extends StatelessWidget {
@@ -16,77 +20,101 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    OrderDetailsManager manager = OrderDetailsManager(context: context);
+    OrderDetailsManager manager =
+        OrderDetailsManager(context: context, orderId: orderId);
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: SingleChildScrollView(
-          child: FutureBuilder(
-              future: manager.getOrderDetails(orderId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+          child: Consumer<OrderProvider>(builder: (context, value, child) {
+            return FutureBuilder(
+                future: manager.loadData(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: Lottie.asset(
+                        AppImages.loading,
+                        delegates: LottieDelegates(values: [
+                          ValueDelegate.color([],
+                              value: AppColors.primaryColor),
+                        ]),
+                      ),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    return Column(
+                      children: [
+                        const Appbar(),
+                        CustomProgress(
+                          order: manager.order!,
+                          orderStatusList: manager.orderStatusList!,
+                        ),
+                        CustomItem(
+                            title: 'Order id', text: '${manager.order!.id}'),
+                        CustomItem(
+                            title: 'Pickup branch',
+                            text: manager.order!.branch?['address'] ??
+                                'Not available'),
+                        CustomItem(
+                            title: 'Payment method',
+                            text: manager.order!.paymentMethod),
+                        CustomItem(
+                            title: 'Pickup date & time',
+                            text:
+                                '${manager.order!.branch?['max_delivery_time']}'),
+                        Recite(order: manager.order!),
+                        TaxRecite(
+                          viewDoc: () async {
+                            await launchUrl(
+                                Uri.parse(manager.order!.invoiceLink));
+                          },
+                        ),
+                        CustomItem(
+                            title: 'Meals',
+                            text:
+                                'Meals ${manager.order!.items[0]['product']['name']}'),
+                      ],
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('Error ${snapshot.error}',
+                        style: AppTheme.errorText);
+                  }
                   return const Center(
-                    child: CircularProgressIndicator(
-                        backgroundColor: AppColors.primaryColor),
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error ${snapshot.error}',
-                      style: AppTheme.errorText);
-                }
-                // else if (!snapshot.hasData) {
-                //   return const Center(
-                //     child: Text(
-                //       'No order found',
-                //       style: AppTheme.errorText,
-                //     ),
-                //   );
-                // }
-
-                return Column(
-                  children: [
-                    const Appbar(),
-                    CustomProgress(order: manager.order!),
-                    CustomItem(title: 'Order id', text: '${manager.order!.id}'),
-                    CustomItem(
-                        title: 'Pickup branch',
-                        text: manager.order!.branch?['address'] ??
-                            'Not available'),
-                    CustomItem(
-                        title: 'Payment method',
-                        text: manager.order!.paymentMethod),
-                    CustomItem(
-                        title: 'Pickup date & time',
-                        text: '${manager.order!.branch?['max_delivery_time']}'),
-                    Recite(order: manager.order!),
-                    TaxRecite(
-                      viewDoc: () async {
-                        await launchUrl(Uri.parse(manager.order!.invoiceLink));
-                      },
+                    child: Text(
+                      'No order found',
+                      style: AppTheme.errorText,
                     ),
-                    CustomItem(
-                        title: 'Meals',
-                        text:
-                            'Meals ${manager.order!.items[0]['product']['name']}'),
-                  ],
-                );
-              }),
+                  );
+                });
+          }),
         ),
         bottomNavigationBar: FutureBuilder(
-            future: manager.getOrderDetails(orderId),
+            future: manager.loadData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                      backgroundColor: AppColors.primaryColor),
+                return Lottie.asset(
+                  AppImages.loading,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  width: MediaQuery.of(context).size.width * 0.1,
+                  delegates: LottieDelegates(values: [
+                    ValueDelegate.color([], value: AppColors.primaryColor),
+                  ]),
+                );
+              } else if (snapshot.connectionState == ConnectionState.done) {
+                return CustomNavigationBar(
+                  order: manager.order!,
+                  onChangeStatus: () {
+                    manager.changeOrderStatus(orderId);
+                  },
                 );
               } else if (snapshot.hasError) {
-                return const Text('Error');
+                return Text('Error ${snapshot.error}',
+                    style: AppTheme.errorText);
               }
-              return CustomNavigationBar(
-                order: manager.order!,
-                onChangeStatus: () {
-                  manager.changeOrderStatus(orderId);
-                },
+              return const Center(
+                child: Text(
+                  'No order found',
+                  style: AppTheme.errorText,
+                ),
               );
             }),
       ),

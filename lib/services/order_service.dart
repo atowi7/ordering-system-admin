@@ -12,31 +12,39 @@ class OrderService {
       return null;
     }
 
-    final response = await http.get(
-      Uri.parse(AppLinks.orders),
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
+    final statuses = [1, 2, 3, 4, 5, 6];
+    final List<OrderModel> allOrders = [];
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> jsonData = jsonDecode(response.body);
+    for (final status in statuses) {
+      final response = await http.get(
+        Uri.parse('${AppLinks.orders}?status=$status'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
 
-      if (jsonData['success']) {
-        List<dynamic> ordersData = jsonData['data']['orders'];
-        final List<OrderModel> orders = ordersData.map((order) {
-          print('orderData$order');
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
 
-          return OrderModel.fromJson(order);
-        }).toList();
+        if (jsonData['success']) {
+          List<dynamic> ordersData = jsonData['data']['orders'];
+          final List<OrderModel> orders = ordersData.map((order) {
+            // print('orderData$order');
 
-        return orders;
+            return OrderModel.fromJson(order);
+          }).toList();
+
+          allOrders.addAll(orders);
+        } else {
+          // final errorMessage = jsonData['message'] ?? 'Unknown error';
+          // print('Error: $errorMessage (Status Code: ${response.statusCode})');
+          return null;
+        }
       } else {
         return null;
       }
-    } else {
-      return null;
     }
+    return allOrders;
   }
 
   Future<OrderModel?>? getOrderDetails(int orderId) async {
@@ -58,10 +66,13 @@ class OrderService {
 
         if (jsonData['success']) {
           final orderData = jsonData['data'];
-          print('orderDetails $orderData');
+          // print('orderDetails $orderData');
           final order = OrderModel.fromJson(orderData);
 
           return order;
+        } else {
+          // final errorMessage = jsonData['message'] ?? 'Unknown error';
+          // print('Error: $errorMessage (Status Code: ${response.statusCode})');
         }
       } catch (e) {
         print(e);
@@ -78,35 +89,34 @@ class OrderService {
       Uri.parse(AppLinks.orderStatuses),
     );
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body)['data'];
+      try {
+        final Map<String, dynamic> jsonData = jsonDecode(response.body);
+        if (jsonData['success']) {
+          List<dynamic> statusData = jsonData['data'];
 
-      final List<Map<String, dynamic>> statuses =
-          data.whereType<Map<String, dynamic>>().map((item) {
-        return item.map((key, value) => MapEntry(key, value));
-      }).toList();
+          final List<Map<String, dynamic>> statuses =
+              statusData.whereType<Map<String, dynamic>>().map((item) {
+            return item.map((key, value) => MapEntry(key, value));
+          }).toList();
 
-      print('statuses $statuses');
+          // print('statuses $statuses');
 
-      return statuses;
+          return statuses;
+        } else {
+          // final errorMessage = jsonData['message'] ?? 'Unknown error';
+          // print('Error: $errorMessage (Status Code: ${response.statusCode})');
+          return null;
+        }
+      } catch (e) {
+        // print(e);
+        return null;
+      }
     } else {
       return null;
     }
   }
 
-  // Future<OrderModel?> getOrderDetials(int orderId) async {
-  //   final response = await http.get(
-  //     Uri.parse('${AppLinks.orders}?$orderId'),
-  //   );
-
-  //   if (response.statusCode == 200) {
-  //     final date = jsonDecode(response.body);
-  //     return OrderModel.fromJson(date);
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
-  Future<bool> changeOrderStatus(int orderId, String newStatus) async {
+  Future<bool> changeOrderStatus(int orderId, int newStatus) async {
     final token = await AuthServices.getToken();
     if (token == null) {
       return false;
@@ -116,13 +126,28 @@ class OrderService {
         await http.post(Uri.parse(AppLinks.orderStatusUpdate), headers: {
       'Authorization': 'Bearer $token',
     }, body: {
-      "order_id": orderId,
-      "new_status": newStatus
+      "order_id": '$orderId',
+      "new_status": '$newStatus'
     });
 
     if (response.statusCode == 200) {
-      return true;
+      try {
+        Map<String, dynamic> jsonData = jsonDecode(response.body);
+
+        if (jsonData['success']) {
+          // print('change order status respons : ${jsonData['data']}');
+          return true;
+        } else {
+          // final errorMessage = jsonData['message'] ?? 'Unknown error';
+          // print('Error: $errorMessage (Status Code: ${response.statusCode})');
+          return false;
+        }
+      } catch (e) {
+        // print(e);
+        return false;
+      }
     } else {
+      // print('Status Code: ${response.body}');
       return false;
     }
   }

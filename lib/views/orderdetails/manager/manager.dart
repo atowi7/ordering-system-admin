@@ -7,15 +7,28 @@ import 'package:provider/provider.dart';
 
 class OrderDetailsManager {
   final BuildContext context;
+  final int? orderId;
+  late final OrderProvider _orderProvider;
   late OrderModel? order;
-  OrderProvider get _orderProvider =>
-      Provider.of<OrderProvider>(context, listen: false);
+  late List<Map<String, dynamic>>? orderStatusList = [];
 
-  OrderDetailsManager({required this.context});
+  OrderDetailsManager({required this.context, this.orderId})
+      : _orderProvider = Provider.of<OrderProvider>(context, listen: false);
 
-  Future<void> getOrderDetails(int orderId) async {
+  Future<void> loadData() async {
+    await _loadOrderDetails(orderId!);
+    await _loadOrderStatuses();
+  }
+
+  Future<void> _loadOrderDetails(int orderId) async {
     await _orderProvider.getOrderDetails(orderId);
     order = _orderProvider.order;
+  }
+
+  Future<void> _loadOrderStatuses() async {
+    await _orderProvider.getOrderStatuses();
+    orderStatusList = _orderProvider.orderStatusList;
+    // print('orderStatusList $orderStatusList');
   }
 
   int getStatusIndex(String status) {
@@ -24,50 +37,35 @@ class OrderDetailsManager {
 
   Future<void> changeOrderStatus(int orderId) async {
     String currentStatus = order!.status!;
+    // print('currentStatus $currentStatus');
 
     String? nextStatus;
     switch (currentStatus) {
-      case 'Pending':
-        nextStatus = 'Preparing';
+      case 'PENDING':
+        nextStatus = 'PREPARING';
         break;
-      case 'Preparing':
-        nextStatus = order!.serviceType == 'Delivery'
-            ? 'Out for Delivery'
-            : 'Ready for Pickup';
+      case 'PREPARING':
+        nextStatus =
+            order!.serviceType == 'Delivery' ? 'OUT_FOR_DELIVERY' : 'READY';
         break;
-      case 'Ready for Pickup':
-      case 'Out for Delivery':
-        nextStatus = 'Completed';
+      case 'READY':
+      case 'OUT_FOR_DELIVERY':
+        nextStatus = 'COMPLETED';
         break;
       default:
-        print('Unexpected status: $currentStatus');
-        break;
-    }
-
-    if (nextStatus != null) {
-      String response =
-          await _orderProvider.changeOrderStatus(orderId, nextStatus);
-      if (response == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
               content: Text(
-                'Status changed to $nextStatus',
+                'No other status to change to.',
                 style: AppTheme.successText,
               ),
               backgroundColor: AppColors.primaryColor),
         );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                'Failed to change status',
-                style: AppTheme.errorText,
-              ),
-              backgroundColor: AppColors.primaryColor),
-        );
-      }
+        break;
     }
 
-    Navigator.pop(context);
+    if (nextStatus != null) {
+      await _orderProvider.changeOrderStatus(context, orderId, nextStatus);
+    }
   }
 }

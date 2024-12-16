@@ -1,107 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
 import 'package:ordering_system_admin/services/order_service.dart';
 import 'package:ordering_system_admin/views/home/widgets/changeorderstatus_dialog.dart';
+import 'package:ordering_system_admin/views/home/widgets/sort_btn.dart';
+import 'package:ordering_system_admin/views/home/widgets/sort_opt.dart';
 import 'package:provider/provider.dart';
 
 class OrderProvider extends ChangeNotifier {
   OrderModel? _order;
-  List<OrderModel>? _orders = [
-    OrderModel(
-      id: 1,
-      status: 'Pending',
-      paymentMethod: 'Cash on Delivery',
-      paymentStatus: 'Unpaid',
-      branch: {'name': 'Main Branch', 'address': '123 Main Street'},
-      items: [
-        {'Pizza': 2, 'Fries': 1}
-      ],
-      deliveryAddress: {'address': '456 Elm Street', 'phone': '123-456-7890'},
-      promoCode: {},
-      prices: {'subtotal': 19.99, 'tax': 1.99, 'total': 21.98},
-      invoiceLink: 'https://example.com/invoice/1',
-      serviceType: 'Delivery',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    OrderModel(
-      id: 2,
-      status: 'Completed',
-      paymentMethod: 'Credit Card',
-      paymentStatus: 'Paid',
-      branch: {'name': 'Branch 2', 'address': '789 Oak Street'},
-      items: [
-        {'Burger': 3, 'Soda': 2}
-      ],
-      deliveryAddress: {'address': '101 Pine Street', 'phone': '987-654-3210'},
-      promoCode: {'code': 'DISCOUNT10', 'discount': 10},
-      prices: {'subtotal': 25.99, 'tax': 2.59, 'total': 28.58},
-      invoiceLink: 'https://example.com/invoice/2',
-      serviceType: 'Pickup',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    OrderModel(
-      id: 3,
-      status: 'Preparing',
-      paymentMethod: 'Apple Pay',
-      paymentStatus: 'Paid',
-      branch: {'name': 'Main Branch', 'address': '123 Main Street'},
-      items: [
-        {'Salad': 1, 'Sandwich': 2}
-      ],
-      deliveryAddress: {'address': '543 Maple Street', 'phone': '555-555-5555'},
-      promoCode: {},
-      prices: {'subtotal': 15.99, 'tax': 1.59, 'total': 17.58},
-      invoiceLink: 'https://example.com/invoice/3',
-      serviceType: 'Delivery',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    OrderModel(
-      id: 4,
-      status: 'Out for Delivery',
-      paymentMethod: 'Cash on Delivery',
-      paymentStatus: 'Unpaid',
-      branch: {'name': 'Branch 2', 'address': '789 Oak Street'},
-      items: [
-        {'Pizza': 2, 'Fries': 1, 'Soda': 2}
-      ],
-      deliveryAddress: {'address': '234 Cedar Street', 'phone': '444-444-4444'},
-      promoCode: {},
-      prices: {'subtotal': 22.99, 'tax': 2.29, 'total': 25.28},
-      invoiceLink: 'https://example.com/invoice/4',
-      serviceType: 'Delivery',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-    OrderModel(
-      id: 5,
-      status: 'Completed',
-      paymentMethod: 'Google Pay',
-      paymentStatus: 'Paid',
-      branch: {'name': 'Main Branch', 'address': '123 Main Street'},
-      items: [
-        {'Burger': 2, 'Fries': 1}
-      ],
-      deliveryAddress: {
-        'address': '678 Walnut Street',
-        'phone': '333-333-3333'
-      },
-      promoCode: {'code': 'DISCOUNT5', 'discount': 5},
-      prices: {'subtotal': 18.99, 'tax': 1.89, 'total': 20.88},
-      invoiceLink: 'https://example.com/invoice/5',
-      serviceType: 'Pickup',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    ),
-  ];
-  List<Map<String, dynamic>>? _orderStatusList = [
-    // 'Pending',
-    // 'Preparing',
-    // 'Ready for pickup',
-    // 'pickup'
+  List<OrderModel>? _orders;
+  List<Map<String, dynamic>>? _orderStatusList;
+  final List<String> _paymentMethods = [
+    'CASH',
+    'CREDIT_CARD',
+    'MADA',
+    'APPLE',
+    'PORTAL',
+    'WALLET',
   ];
 
   final orderService = OrderService();
@@ -116,6 +33,7 @@ class OrderProvider extends ChangeNotifier {
   OrderModel? get order => _order;
   List<OrderModel>? get orders => _orders;
   List<Map<String, dynamic>>? get orderStatusList => _orderStatusList;
+  List<String> get paymentMethods => _paymentMethods;
   // bool _isLoading = false;
   // String? get selectedOrderId => _selectedOrderId;
   String? get selectedStatus => _selectedStatus;
@@ -124,6 +42,10 @@ class OrderProvider extends ChangeNotifier {
   String? get selectedSort => _selectedSort;
   // bool get isLoading => _isLoading;
 
+  void setOrders(List<OrderModel> orders) {
+    _orders = orders;
+  }
+
   Future<void> getOrders() async {
     final fetchedOrders = await orderService.getOrders();
     if (fetchedOrders != null || fetchedOrders!.isNotEmpty) {
@@ -131,9 +53,14 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getOrderStatuses() async {
+    _orderStatusList = await orderService.getOrderStatuses();
+  }
+
   Future<void> getOrderDetails(int orderId) async {
     try {
       final fetchedOrder = await orderService.getOrderDetails(orderId);
+      // print('fetchedOrder $fetchedOrder.]');
       if (fetchedOrder != null) {
         _order = fetchedOrder;
       }
@@ -142,16 +69,13 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getOrderStatuses() async {
-    _orderStatusList = await orderService.getOrderStatuses();
-  }
-
   void sortOrders() {
     if (_selectedSort == 'old_to_new') {
       _orders!.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     } else if (_selectedSort == 'new_to_od') {
       _orders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     }
+    notifyListeners();
   }
 
   void filterOrders() {
@@ -159,6 +83,7 @@ class OrderProvider extends ChangeNotifier {
       return order.status == _selectedFilterStatus ||
           order.paymentMethod == _selectedFilterPayment;
     }).toList();
+    notifyListeners();
   }
 
   void resetSort() {
@@ -169,11 +94,16 @@ class OrderProvider extends ChangeNotifier {
   void resetFilter() {
     _selectedFilterStatus = null;
     _selectedFilterPayment = null;
-
     notifyListeners();
   }
 
-  void showChangeOrderStatusDialog(BuildContext context, int orderId) {
+  // void updateUI() {
+  //   notifyListeners();
+
+  // }
+
+  void showChangeOrderStatusDialog(BuildContext context, int orderId,
+      List<Map<String, dynamic>> orderStatusList) {
     // showStatusChangeDialog = true;
 
     showDialog(
@@ -183,13 +113,13 @@ class OrderProvider extends ChangeNotifier {
         return ChangeOrderStatusDialog(
             orderId: orderId,
             selectedStatus: provider.selectedStatus,
+            orderStatusList: orderStatusList,
             onStatusUpdated: (newStatus) =>
                 provider.updateSelectedStatus(newStatus),
             onStatusChanged: (newStatus) =>
-                provider.changeOrderStatus(orderId, newStatus));
+                provider.changeOrderStatus(context, orderId, newStatus));
       }),
     );
-    notifyListeners();
   }
 
   void updateSelectedStatus(String? newSelected) {
@@ -212,31 +142,60 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<String> changeOrderStatus(int orderId, String? newStatus) async {
+  Future<void> changeOrderStatus(
+      BuildContext context, int orderId, String? newStatus) async {
     final orderIndex = _orders!.indexWhere((o) => o.id == orderId);
     if (orderIndex != -1) {
       _orders![orderIndex].status = newStatus;
+      // print('newStatus $newStatus');
 
       try {
-        bool isUpdated =
-            await orderService.changeOrderStatus(orderId, newStatus!);
-
+        bool isUpdated = await orderService.changeOrderStatus(
+            orderId, getStatusIndex(newStatus!) + 1);
+        // print('isUpdated $isUpdated ${getStatusIndex(newStatus) + 1}');
         if (isUpdated) {
           _selectedStatus = null;
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text(
+                    'Status is changed to succesfully',
+                    style: AppTheme.successText,
+                  ),
+                  backgroundColor: AppColors.primaryColor),
+            );
+          }
+
           notifyListeners();
-          return 'success';
+        } else {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text(
+                    'Failed to change status',
+                    style: AppTheme.errorText,
+                  ),
+                  backgroundColor: AppColors.primaryColor),
+            );
+          }
         }
       } catch (e) {
-        return 'failed';
+        print(e);
       }
     }
     // showStatusChangeDialog = false;
-    return 'failed';
   }
 
   int getStatusIndex(String status) {
     for (int i = 0; i < orderStatusList!.length; i++) {
-      if (orderStatusList![i]['name'] == status) {
+      // print(
+      //     'getStatusIndex ${orderStatusList![i]['name'].toString().toLowerCase().trim()}  ||| ${status.toLowerCase().trim()}');
+      if (orderStatusList![i]['name']
+          .toString()
+          .toLowerCase()
+          .trim()
+          .contains(status.toLowerCase().trim().split('_').join(' '))) {
+        // print('getStatusIndex $i');
         return i;
       }
     }
@@ -267,55 +226,25 @@ class OrderProvider extends ChangeNotifier {
                         child: const Text('Clear', style: AppTheme.clearBtn)),
                   ],
                 ),
-                Transform.translate(
-                  offset: const Offset(-8, -8),
-                  child: RadioListTile<String>(
-                    title: Transform.translate(
-                      offset: const Offset(-16, 0),
-                      child: const Text('Date : new to old',
-                          style: AppTheme.sortOpt),
-                    ),
-                    contentPadding: EdgeInsets.zero,
-                    fillColor: WidgetStateProperty.all(Colors.grey),
+                SortOption(
+                    title: 'Date : new to old',
                     value: 'new_to_old',
                     groupValue: provider.selectedSort,
                     onChanged: (value) => updateSelectedSort(value),
-                  ),
+                    dy: -8),
+                SortOption(
+                  title: 'Date : old to new',
+                  value: 'old_to_new',
+                  groupValue: provider.selectedSort,
+                  onChanged: (value) => updateSelectedSort(value),
+                  dy: -16,
                 ),
-                Transform.translate(
-                  offset: const Offset(-8, -16),
-                  child: RadioListTile<String>(
-                    title: Transform.translate(
-                      offset: const Offset(-16, 0),
-                      child: const Text('Date : old to new',
-                          style: AppTheme.sortOpt),
-                    ),
-                    contentPadding: EdgeInsets.zero,
-                    fillColor: WidgetStateProperty.all(Colors.grey),
-                    value: 'old_to_new',
-                    groupValue: provider.selectedSort,
-                    onChanged: (value) => updateSelectedSort(value),
-                  ),
+                FilterButton(
+                  onSaved: () {
+                    provider.sortOrders();
+                    Navigator.of(context).pop();
+                  },
                 ),
-                Transform.translate(
-                  offset: const Offset(0, -8),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                        onPressed: () {
-                          provider.sortOrders();
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Save', style: AppTheme.saveBtn)),
-                  ),
-                )
               ],
             ),
           );
@@ -353,221 +282,56 @@ class OrderProvider extends ChangeNotifier {
                   ),
                   const SizedBox(height: 10),
                   const Text('Order Status', style: AppTheme.orderStatusHead),
-                  Transform.translate(
-                    offset: const Offset(-8, 0),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: Text(
-                            _orderStatusList?.isNotEmpty ?? false
-                                ? _orderStatusList![0]['name']
-                                : 'Pending',
-                            style: AppTheme.orderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: _orderStatusList?.isNotEmpty ?? false
-                          ? _orderStatusList![0]['name']
-                          : 'Pending',
-                      groupValue: provider.selectedFilterStatus,
-                      onChanged: (value) => updateSelectedFilterStatus(value),
-                    ),
+                  ListView.builder(
+                    itemCount: _orderStatusList!.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final orderStatus = _orderStatusList![index];
+                      return Transform.translate(
+                        offset: Offset(-8, -15.0 * index),
+                        child: RadioListTile<String>(
+                          title: Transform.translate(
+                            offset: const Offset(-16, 0),
+                            child: Text(orderStatus['name'],
+                                style: AppTheme.orderStatusTitle),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          fillColor: WidgetStateProperty.all(Colors.grey),
+                          value: orderStatus['name'],
+                          groupValue: provider.selectedFilterStatus,
+                          onChanged: (value) =>
+                              updateSelectedFilterStatus(value),
+                        ),
+                      );
+                    },
                   ),
-                  Transform.translate(
-                    offset: const Offset(-8, -15),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: Text(
-                            _orderStatusList?.isNotEmpty ?? false
-                                ? _orderStatusList![1]['name']
-                                : 'Preparing',
-                            style: AppTheme.orderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: _orderStatusList?.isNotEmpty ?? false
-                          ? _orderStatusList![1]['name']
-                          : 'Preparing',
-                      groupValue: provider.selectedFilterStatus,
-                      onChanged: (value) => updateSelectedFilterStatus(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -30),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: Text(
-                            _orderStatusList?.isNotEmpty ?? false
-                                ? _orderStatusList![2]['name']
-                                : 'Ready For Pickup',
-                            style: AppTheme.orderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: _orderStatusList?.isNotEmpty ?? false
-                          ? _orderStatusList![2]['name']
-                          : 'Ready For Pickup',
-                      groupValue: provider.selectedFilterStatus,
-                      onChanged: (value) => updateSelectedFilterStatus(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -45),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: Text(
-                            _orderStatusList?.isNotEmpty ?? false
-                                ? _orderStatusList![3]['name']
-                                : 'Out for Delivery',
-                            style: AppTheme.orderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: _orderStatusList?.isNotEmpty ?? false
-                          ? _orderStatusList![3]['name']
-                          : 'Out for Delivery',
-                      groupValue: provider.selectedFilterStatus,
-                      onChanged: (value) => updateSelectedFilterStatus(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -60),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: Text(
-                            _orderStatusList?.isNotEmpty ?? false
-                                ? _orderStatusList![4]['name']
-                                : 'Completed',
-                            style: AppTheme.orderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: _orderStatusList?.isNotEmpty ?? false
-                          ? _orderStatusList![4]['name']
-                          : 'Completed',
-                      groupValue: provider.selectedFilterStatus,
-                      onChanged: (value) => updateSelectedFilterStatus(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -75),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: Text(
-                            _orderStatusList?.isNotEmpty ?? false
-                                ? _orderStatusList![5]['name']
-                                : 'Canceled',
-                            style: AppTheme.orderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: _orderStatusList?.isNotEmpty ?? false
-                          ? _orderStatusList![5]['name']
-                          : 'Canceled',
-                      groupValue: provider.selectedFilterStatus,
-                      onChanged: (value) => updateSelectedFilterStatus(value),
-                    ),
-                  ),
-                  // const SizedBox(height: 10),
                   Transform.translate(
                     offset: const Offset(4, -50),
                     child: const Text('Payment method',
                         style: AppTheme.paymentMethodHead),
                   ),
-                  Transform.translate(
-                    offset: const Offset(-8, -55),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: const Text('CASH',
-                            style: AppTheme.customOrderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'CASH',
-                      groupValue: provider.selectedFilterPayment,
-                      onChanged: (value) => updateSelectedFilterPayment(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -75),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: const Text('CREDIT_CARD',
-                            style: AppTheme.customOrderStatusTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'CREDIT_CARD',
-                      groupValue: provider.selectedFilterPayment,
-                      onChanged: (value) => updateSelectedFilterPayment(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -90),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: const Text('MADA',
-                            style: AppTheme.paymentMethodTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'MADA',
-                      groupValue: provider.selectedFilterPayment,
-                      onChanged: (value) => updateSelectedFilterPayment(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -105),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: const Text('APPLE',
-                            style: AppTheme.paymentMethodTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'APPLE',
-                      groupValue: provider.selectedFilterPayment,
-                      onChanged: (value) => updateSelectedFilterPayment(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -120),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: const Text('PORTAL',
-                            style: AppTheme.paymentMethodTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'PORTAL',
-                      groupValue: provider.selectedFilterPayment,
-                      onChanged: (value) => updateSelectedFilterPayment(value),
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-8, -135),
-                    child: RadioListTile<String>(
-                      title: Transform.translate(
-                        offset: const Offset(-16, 0),
-                        child: const Text('WALLET',
-                            style: AppTheme.paymentMethodTitle),
-                      ),
-                      contentPadding: EdgeInsets.zero,
-                      fillColor: WidgetStateProperty.all(Colors.grey),
-                      value: 'WALLET',
-                      groupValue: provider.selectedFilterPayment,
-                      onChanged: (value) => updateSelectedFilterPayment(value),
-                    ),
+                  ListView.builder(
+                    itemCount: paymentMethods.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final paymentMethod = _paymentMethods[index];
+                      return Transform.translate(
+                        offset: Offset(-8, -55.0 - (15 * index)),
+                        child: RadioListTile<String>(
+                          title: Transform.translate(
+                            offset: const Offset(-16, 0),
+                            child: Text(paymentMethod,
+                                style: AppTheme.paymentMethodTitle),
+                          ),
+                          contentPadding: EdgeInsets.zero,
+                          fillColor: WidgetStateProperty.all(Colors.grey),
+                          value: paymentMethod,
+                          groupValue: provider.selectedFilterPayment,
+                          onChanged: (value) =>
+                              updateSelectedFilterPayment(value),
+                        ),
+                      );
+                    },
                   ),
                   Transform.translate(
                     offset: const Offset(-8, -130),
@@ -596,3 +360,185 @@ class OrderProvider extends ChangeNotifier {
     );
   }
 }
+
+ // Transform.translate(
+                  //   offset: const Offset(-8, 0),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: Text(_orderStatusList![0]['name'],
+                  //           style: AppTheme.orderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: _orderStatusList![0]['name'],
+                  //     groupValue: provider.selectedFilterStatus,
+                  //     onChanged: (value) => updateSelectedFilterStatus(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -15),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: Text(_orderStatusList![1]['name'],
+                  //           style: AppTheme.orderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: _orderStatusList![1]['name'],
+                  //     groupValue: provider.selectedFilterStatus,
+                  //     onChanged: (value) => updateSelectedFilterStatus(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -30),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: Text(_orderStatusList![2]['name'],
+                  //           style: AppTheme.orderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: _orderStatusList![2]['name'],
+                  //     groupValue: provider.selectedFilterStatus,
+                  //     onChanged: (value) => updateSelectedFilterStatus(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -45),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: Text(_orderStatusList![3]['name'],
+                  //           style: AppTheme.orderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: _orderStatusList![3]['name'],
+                  //     groupValue: provider.selectedFilterStatus,
+                  //     onChanged: (value) => updateSelectedFilterStatus(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -60),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: Text(_orderStatusList![4]['name'],
+                  //           style: AppTheme.orderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: _orderStatusList![4]['name'],
+                  //     groupValue: provider.selectedFilterStatus,
+                  //     onChanged: (value) => updateSelectedFilterStatus(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -75),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: Text(_orderStatusList![5]['name'],
+                  //           style: AppTheme.orderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: _orderStatusList![5]['name'],
+                  //     groupValue: provider.selectedFilterStatus,
+                  //     onChanged: (value) => updateSelectedFilterStatus(value),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 10),
+                   // Transform.translate(
+                  //   offset: const Offset(-8, -55),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: const Text('CASH',
+                  //           style: AppTheme.customOrderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: 'CASH',
+                  //     groupValue: provider.selectedFilterPayment,
+                  //     onChanged: (value) => updateSelectedFilterPayment(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -70),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: const Text('CREDIT_CARD',
+                  //           style: AppTheme.customOrderStatusTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: 'CREDIT_CARD',
+                  //     groupValue: provider.selectedFilterPayment,
+                  //     onChanged: (value) => updateSelectedFilterPayment(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -90),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: const Text('MADA',
+                  //           style: AppTheme.paymentMethodTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: 'MADA',
+                  //     groupValue: provider.selectedFilterPayment,
+                  //     onChanged: (value) => updateSelectedFilterPayment(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -105),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: const Text('APPLE',
+                  //           style: AppTheme.paymentMethodTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: 'APPLE',
+                  //     groupValue: provider.selectedFilterPayment,
+                  //     onChanged: (value) => updateSelectedFilterPayment(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -120),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: const Text('PORTAL',
+                  //           style: AppTheme.paymentMethodTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: 'PORTAL',
+                  //     groupValue: provider.selectedFilterPayment,
+                  //     onChanged: (value) => updateSelectedFilterPayment(value),
+                  //   ),
+                  // ),
+                  // Transform.translate(
+                  //   offset: const Offset(-8, -135),
+                  //   child: RadioListTile<String>(
+                  //     title: Transform.translate(
+                  //       offset: const Offset(-16, 0),
+                  //       child: const Text('WALLET',
+                  //           style: AppTheme.paymentMethodTitle),
+                  //     ),
+                  //     contentPadding: EdgeInsets.zero,
+                  //     fillColor: WidgetStateProperty.all(Colors.grey),
+                  //     value: 'WALLET',
+                  //     groupValue: provider.selectedFilterPayment,
+                  //     onChanged: (value) => updateSelectedFilterPayment(value),
+                  //   ),
+                  // ),

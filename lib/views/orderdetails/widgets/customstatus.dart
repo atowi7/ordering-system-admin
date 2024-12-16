@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
-import 'package:ordering_system_admin/views/orderdetails/manager/manager.dart';
 
 class CustomStatus extends StatelessWidget {
   final BuildContext context;
   final String title;
   final String currentStatus;
+  final bool isActive;
   const CustomStatus(
       {super.key,
       required this.context,
       required this.title,
-      required this.currentStatus});
+      required this.currentStatus,
+      required this.isActive});
 
   @override
   Widget build(BuildContext context) {
-    OrderDetailsManager manager = OrderDetailsManager(context: context);
-    final isActive =
-        manager.getStatusIndex(title) <= manager.getStatusIndex(currentStatus);
+    // print('isActive $title $isActive');
     return Column(
       children: [
         Container(

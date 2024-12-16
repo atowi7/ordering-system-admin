@@ -29,6 +29,11 @@ class AppTheme {
     height: 1,
     fontWeight: FontWeight.w600,
   );
+  static const TextStyle loadText = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: AppColors.primaryColor,
+  );
   static const TextStyle homeHead = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.bold,
@@ -60,6 +65,7 @@ class AppTheme {
     fontWeight: FontWeight.w800,
     color: Color.fromRGBO(189, 189, 189, 1),
     fontSize: 13,
+    overflow: TextOverflow.ellipsis,
   );
   static const TextStyle orderItemsInvoice = TextStyle(
     height: 1,
@@ -158,7 +164,7 @@ class AppTheme {
     fontWeight: FontWeight.w900,
   );
   static const TextStyle orderDetialsItemSubTitle = TextStyle(
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: FontWeight.w500,
       color: Color.fromRGBO(117, 117, 117, 1));
   static const TextStyle orderDetailsReciteHead = TextStyle(

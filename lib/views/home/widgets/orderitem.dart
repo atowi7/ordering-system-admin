@@ -33,7 +33,11 @@ class OrderItem extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(order.status ?? 'Pendng',
+                    Text(
+                        (order.status![0] +
+                                order.status!.substring(1).toLowerCase())
+                            .split('_')
+                            .join(' '),
                         style: AppTheme.orderItemPending),
                     const SizedBox(width: 5),
                     InkWell(
@@ -50,7 +54,7 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Username', style: AppTheme.orderItemtitle),
-                Text(order.deliveryAddress?['name'] ?? 'Not available',
+                Text(order.branch?['name'] ?? 'Not available',
                     style: AppTheme.orderItemsubtitle),
               ],
             ),
@@ -66,7 +70,11 @@ class OrderItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Branch', style: AppTheme.orderItemtitle),
-                Text(order.branch?['address'] ?? 'Not avaliable',
+                Text(
+                    (order.branch?['address'] ?? 'Not available')
+                        ?.split(' ')
+                        .take(6)
+                        .join(' '),
                     style: AppTheme.orderItemsubtitle),
               ],
             ),

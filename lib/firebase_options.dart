@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyA7UIarAk1my8pHY5UQdAxCo1_74b4aK38',
-    appId: '1:57222298515:android:a8cfd87797daeee560c666',
-    messagingSenderId: '57222298515',
-    projectId: 'instakit-4d603',
-    storageBucket: 'instakit-4d603.firebasestorage.app',
+    apiKey: 'AIzaSyAlo5IC5AQjipSzv3C6SKHGhag_Ugvu5PE',
+    appId: '1:743303606576:android:8b541451807923379b18f5',
+    messagingSenderId: '743303606576',
+    projectId: 'mobile-admin-dashboard',
+    storageBucket: 'mobile-admin-dashboard.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCYinxRO-CO-nWJnUzHDK7vm4xLsZV4Oj0',
-    appId: '1:57222298515:ios:1c5c10bf5e66eb2260c666',
-    messagingSenderId: '57222298515',
-    projectId: 'instakit-4d603',
-    storageBucket: 'instakit-4d603.firebasestorage.app',
-    iosBundleId: 'com.example.orderingSystemAdmin',
+    apiKey: 'AIzaSyBqk_aVyLyeh1ETyoByY8h4BOI7c32ntVI',
+    appId: '1:743303606576:ios:bfbff0c852f0989e9b18f5',
+    messagingSenderId: '743303606576',
+    projectId: 'mobile-admin-dashboard',
+    storageBucket: 'mobile-admin-dashboard.firebasestorage.app',
+    iosBundleId: 'com.atowi7.instakit',
   );
+
 }
