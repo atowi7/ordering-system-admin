@@ -31,6 +31,10 @@ class OrderDetailsManager {
     // print('orderStatusList $orderStatusList');
   }
 
+  void onRefresh() async {
+    _orderProvider.onRefresh();
+  }
+
   int getStatusIndex(String status) {
     return _orderProvider.getStatusIndex(status);
   }

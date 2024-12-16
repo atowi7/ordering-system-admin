@@ -69,6 +69,10 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
+  void onRefresh() {
+    notifyListeners();
+  }
+
   void sortOrders() {
     if (_selectedSort == 'old_to_new') {
       _orders!.sort((a, b) => a.createdAt.compareTo(b.createdAt));

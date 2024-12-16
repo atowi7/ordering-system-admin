@@ -1,4 +1,4 @@
-package com.example.ordering_system_admin
+package com.atowi7.instakit
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -27,6 +27,10 @@ class HomeManager {
     // print('orderStatusList $orderStatusList');
   }
 
+   void onRefresh() async {
+    _orderProvider.onRefresh();
+  }
+
   void sortOrders() {
     _orderProvider.sortOrders();
     orders = _orderProvider.orders;

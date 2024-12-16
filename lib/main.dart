@@ -4,7 +4,6 @@ import 'package:ordering_system_admin/design_system/app_text.dart';
 import 'package:ordering_system_admin/enhancedmaterialapp.dart';
 import 'package:ordering_system_admin/views/auth/login/screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:ordering_system_admin/views/home/screen.dart';
 import 'firebase_options.dart';
 
 // final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: AppText.appName,
         // theme: AppTheme.theme,
-        home: const HomeScreen(),
+        home: const LoginScreen(),
         routes: AppRoutes.routes,
         debugShowCheckedModeBanner: false,
       ),
