@@ -32,7 +32,7 @@ class OrderDetailsManager {
   }
 
   void onRefresh() async {
-    _orderProvider.onRefresh();
+    await loadData();
   }
 
   int getStatusIndex(String status) {

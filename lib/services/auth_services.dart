@@ -34,8 +34,8 @@ class AuthServices {
     final response = await http.post(Uri.parse(AppLinks.login), headers: {
       'Authorization': AppLinks.token,
     }, body: {
-      'email': email,
-      'password': password,
+      'email': "admin@Shehab.com",
+      'password': "Shehab@123",
       'token': token ?? 'null',
       'device': Platform.isAndroid ? '1' : '2'
     });

@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 
-class ChangeOrderStatusDialog extends StatelessWidget {
+class ChangeOrderStatusDialog extends StatefulWidget {
   final int? orderId;
-  final String? selectedStatus;
+  // final String? _selectedStatus;
   final List<Map<String, dynamic>> orderStatusList;
 
   final Function(String?) onStatusChanged;
-  final Function(String) onStatusUpdated;
+  // final Function(String) onStatusUpdated;
   const ChangeOrderStatusDialog(
       {super.key,
       required this.orderId,
-      required this.selectedStatus,
       required this.orderStatusList,
-      required this.onStatusUpdated,
       required this.onStatusChanged});
 
+  @override
+  State<ChangeOrderStatusDialog> createState() =>
+      _ChangeOrderStatusDialogState();
+}
+
+class _ChangeOrderStatusDialogState extends State<ChangeOrderStatusDialog> {
+  String? _selectedStatus;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -28,14 +33,15 @@ class ChangeOrderStatusDialog extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Choose the status that matches the order number $orderId',
+              Text(
+                  'Choose the status that matches the order number ${widget.orderId}',
                   style: AppTheme.changeOrderStatusSubHead),
               // for (final status in  orderStatusList!)
               //   RadioListTile<String>(
               //     title: Text(status['name'],
               //         style: AppTheme.orderStatusTitle),
               //     value: status['value'].toString(),
-              //     groupValue: selectedStatus,
+              //     groupValue: _selectedStatus,
               //     fillColor: WidgetStateProperty.all(Colors.grey),
               //     onChanged: (value) {
               //       if (value != null) {
@@ -46,15 +52,17 @@ class ChangeOrderStatusDialog extends StatelessWidget {
               RadioListTile<String>(
                 title: Transform.translate(
                   offset: const Offset(-16, 0),
-                  child: Text(orderStatusList[0]['name'],
+                  child: Text(widget.orderStatusList[0]['name'],
                       style: AppTheme.orderStatusTitle),
                 ),
-                value: orderStatusList[0]['name'],
-                groupValue: selectedStatus,
+                value: widget.orderStatusList[0]['name'],
+                groupValue: _selectedStatus,
                 fillColor: WidgetStateProperty.all(Colors.grey),
                 onChanged: (value) {
                   if (value != null) {
-                    onStatusUpdated(value);
+                    setState(() {
+                      _selectedStatus = value;
+                    });
                   }
                 },
               ),
@@ -63,16 +71,16 @@ class ChangeOrderStatusDialog extends StatelessWidget {
                 child: RadioListTile<String>(
                   title: Transform.translate(
                     offset: const Offset(-16, 0),
-                    child: Text(orderStatusList[1]['name'],
+                    child: Text(widget.orderStatusList[1]['name'],
                         style: AppTheme.orderStatusTitle),
                   ),
-                  value: orderStatusList[1]['name'],
-                  groupValue: selectedStatus,
+                  value: widget.orderStatusList[1]['name'],
+                  groupValue: _selectedStatus,
                   fillColor: WidgetStateProperty.all(Colors.grey),
                   onChanged: (value) {
-                    if (value != null) {
-                      onStatusUpdated(value);
-                    }
+                    setState(() {
+                      _selectedStatus = value;
+                    });
                   },
                 ),
               ),
@@ -81,15 +89,17 @@ class ChangeOrderStatusDialog extends StatelessWidget {
                 child: RadioListTile<String>(
                   title: Transform.translate(
                     offset: const Offset(-16, 0),
-                    child: Text(orderStatusList[2]['name'],
+                    child: Text(widget.orderStatusList[2]['name'],
                         style: AppTheme.orderStatusTitle),
                   ),
-                  value: orderStatusList[2]['name'],
-                  groupValue: selectedStatus,
+                  value: widget.orderStatusList[2]['name'],
+                  groupValue: _selectedStatus,
                   fillColor: WidgetStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     if (value != null) {
-                      onStatusUpdated(value);
+                      setState(() {
+                        _selectedStatus = value;
+                      });
                     }
                   },
                 ),
@@ -99,15 +109,17 @@ class ChangeOrderStatusDialog extends StatelessWidget {
                 child: RadioListTile<String>(
                   title: Transform.translate(
                     offset: const Offset(-16, 0),
-                    child: Text(orderStatusList[3]['name'],
+                    child: Text(widget.orderStatusList[3]['name'],
                         style: AppTheme.orderStatusTitle),
                   ),
-                  value: orderStatusList[3]['name'],
-                  groupValue: selectedStatus,
+                  value: widget.orderStatusList[3]['name'],
+                  groupValue: _selectedStatus,
                   fillColor: WidgetStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     if (value != null) {
-                      onStatusUpdated(value);
+                      setState(() {
+                        _selectedStatus = value;
+                      });
                     }
                   },
                 ),
@@ -117,15 +129,17 @@ class ChangeOrderStatusDialog extends StatelessWidget {
                 child: RadioListTile<String>(
                   title: Transform.translate(
                     offset: const Offset(-16, 0),
-                    child: Text(orderStatusList[4]['name'],
+                    child: Text(widget.orderStatusList[4]['name'],
                         style: AppTheme.orderStatusTitle),
                   ),
-                  value: orderStatusList[4]['name'],
-                  groupValue: selectedStatus,
+                  value: widget.orderStatusList[4]['name'],
+                  groupValue: _selectedStatus,
                   fillColor: WidgetStateProperty.all(Colors.grey),
                   onChanged: (value) {
                     if (value != null) {
-                      onStatusUpdated(value);
+                      setState(() {
+                        _selectedStatus = value;
+                      });
                     }
                   },
                 ),
@@ -135,14 +149,18 @@ class ChangeOrderStatusDialog extends StatelessWidget {
                 child: RadioListTile<String>(
                   title: Transform.translate(
                     offset: const Offset(-16, 0),
-                    child: Text(orderStatusList[5]['name'],
+                    child: Text(widget.orderStatusList[5]['name'],
                         style: AppTheme.orderStatusTitle),
                   ),
-                  value: orderStatusList[5]['name'],
-                  groupValue: selectedStatus,
+                  value: widget.orderStatusList[5]['name'],
+                  groupValue: _selectedStatus,
                   fillColor: WidgetStateProperty.all(Colors.grey),
                   onChanged: (value) {
-                    onStatusUpdated(value!);
+                    if (value != null) {
+                      setState(() {
+                        _selectedStatus = value;
+                      });
+                    }
                   },
                 ),
               ),
@@ -157,8 +175,8 @@ class ChangeOrderStatusDialog extends StatelessWidget {
                         backgroundColor: Theme.of(context).primaryColor,
                       ),
                       onPressed: () {
-                        if (selectedStatus != null) {
-                          onStatusChanged(selectedStatus);
+                        if (_selectedStatus != null) {
+                          widget.onStatusChanged(_selectedStatus);
                           Navigator.of(context).pop();
                         }
                       },
