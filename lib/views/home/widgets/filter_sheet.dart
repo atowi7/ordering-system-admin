@@ -82,7 +82,7 @@ class _SortFilterBottomSheetState extends State<FilterBottomSheet> {
                   : [],
             ),
             Transform.translate(
-              offset: const Offset(4, -60),
+              offset: const Offset(4, -35),
               child: const Text('Payment method',
                   style: AppTheme.paymentMethodHead),
             ),
@@ -91,7 +91,7 @@ class _SortFilterBottomSheetState extends State<FilterBottomSheet> {
                   .map((paymentMethod) => Transform.translate(
                         offset: Offset(
                             -8,
-                            -65.0 -
+                            -32.0 -
                                 (15 * _paymentMethods.indexOf(paymentMethod))),
                         child: RadioListTile<String>(
                             title: Transform.translate(

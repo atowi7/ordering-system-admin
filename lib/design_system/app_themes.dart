@@ -160,7 +160,7 @@ class AppTheme {
   );
   static const TextStyle orderDetialsItemTitle = TextStyle(
     color: Colors.black,
-    fontSize: 15,
+    fontSize: 13,
     fontWeight: FontWeight.w900,
   );
   static const TextStyle orderDetialsItemSubTitle = TextStyle(

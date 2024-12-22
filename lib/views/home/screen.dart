@@ -25,17 +25,16 @@ class HomeScreen extends StatelessWidget {
           body: Consumer<OrderProvider>(builder: (_, provider, ___) {
             print('manager.isRefresh ${manager.isRefresh}');
             return RefreshIndicator(
-              onRefresh: () async {
-                manager.onRefresh();
-              },
-              child:  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Heading(title: AppText.homeTitle),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.02),
-                     manager.isRefresh
-                  ?   FutureBuilder(
+                onRefresh: () async {
+                  manager.onRefresh();
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Heading(title: AppText.homeTitle),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                    manager.isRefresh
+                        ? FutureBuilder(
                             future: manager.loadData(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
@@ -76,13 +75,12 @@ class HomeScreen extends StatelessWidget {
                                   style: AppTheme.errorText,
                                 ),
                               );
-                            }):OrderList(
-                      orders: provider.orders!,
-                      orderStatusList: provider.orderStatusList!),
-                      ],
-                    )
-                  
-            );
+                            })
+                        : OrderList(
+                            orders: provider.modifiedOrders!,
+                            orderStatusList: provider.orderStatusList!),
+                  ],
+                ));
           }),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,

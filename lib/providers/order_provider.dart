@@ -10,6 +10,7 @@ import 'package:ordering_system_admin/views/home/widgets/filter_sheet.dart';
 class OrderProvider extends ChangeNotifier {
   OrderModel? _order;
   List<OrderModel>? _orders;
+  List<OrderModel>? _modifiedOrders;
   List<Map<String, dynamic>>? _orderStatusList;
 
   final orderService = OrderService();
@@ -24,6 +25,7 @@ class OrderProvider extends ChangeNotifier {
 
   OrderModel? get order => _order;
   List<OrderModel>? get orders => _orders;
+  List<OrderModel>? get modifiedOrders => _modifiedOrders;
   List<Map<String, dynamic>>? get orderStatusList => _orderStatusList;
   // List<String> get paymentMethods => _paymentMethods;
   // bool _isLoading = false;
@@ -68,15 +70,27 @@ class OrderProvider extends ChangeNotifier {
   void sortOrders(BuildContext context, String? selectedSort) {
     if (_orders != null) {
       if (selectedSort != null) {
-        if (selectedSort == 'old_to_new') {
-          _orders!.sort((a, b) {
-            // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
-            return a.createdAt.compareTo(b.createdAt);
-          });
-        } else if (selectedSort == 'new_to_old') {
-          _orders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        if (_modifiedOrders!.length < _orders!.length) {
+          if (selectedSort == 'old_to_new') {
+            _modifiedOrders!.sort((a, b) {
+              // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
+              return a.createdAt.compareTo(b.createdAt);
+            });
+          } else if (selectedSort == 'new_to_old') {
+            _modifiedOrders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          }
+        } else {
+          if (selectedSort == 'old_to_new') {
+            _orders!.sort((a, b) {
+              // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
+              return a.createdAt.compareTo(b.createdAt);
+            });
+          } else if (selectedSort == 'new_to_old') {
+            _orders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          }
         }
-        print('sorted ${orders!.first.id}');
+
+        // print('sorted ${orders!.first.id}');
         notifyListeners();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -105,35 +119,48 @@ class OrderProvider extends ChangeNotifier {
     if (selectedFilterStatus == null && selectedFilterPayment == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text(
-              'Please choose at least one option to filter',
-              style: AppTheme.successText,
-            ),
-            backgroundColor: AppColors.primaryColor),
+          content: Text(
+            'Please choose at least one option to filter',
+            style: AppTheme.successText,
+          ),
+          backgroundColor: AppColors.primaryColor,
+        ),
       );
-    } else {
-      _orders!.where((order) {
-        // print(
-        //     'order.status ${order.status!.toLowerCase().trim()} | ${selectedFilterStatus ?? selectedFilterStatus!.toLowerCase().trim().split('_').join(' ')} order.paymentMethod ${order.paymentMethod.toLowerCase().trim()} | ${selectedFilterPayment ?? selectedFilterPayment!.toLowerCase()} ');
-        // print(
-        //     'filterOrders ${selectedFilterStatus.toLowerCase().contains(order.status!.toLowerCase().trim().split('_').join(' ')) || order.paymentMethod.toLowerCase().contains(selectedFilterPayment.toLowerCase().trim().split('_').join(' '))}');
-        return (selectedFilterStatus != null &&
-                selectedFilterStatus.toLowerCase().contains(
-                    order.status!.toLowerCase().trim().split('_').join(' '))) ||
-            (selectedFilterPayment != null &&
-                selectedFilterPayment
-                    .toLowerCase()
-                    .contains(order.paymentMethod.toLowerCase().trim()));
-      }).toList();
+      return;
+    }
+
+    final String? filterStatus =
+        selectedFilterStatus?.toLowerCase().trim().replaceAll('_', ' ');
+    final String? filterPayment = selectedFilterPayment?.toLowerCase().trim();
+
+    final filteredOrders = _orders?.where((order) {
+      final orderStatus =
+          order.status?.toLowerCase().trim().replaceAll('_', ' ');
+      final paymentMethod = order.paymentMethod.toLowerCase().trim();
+
+      print(' order.status $orderStatus $filterStatus');
+
+      final matchesStatus =
+          filterStatus == null || filterStatus.contains(orderStatus!);
+      final matchesPayment =
+          filterPayment == null || paymentMethod.contains(filterPayment);
+
+      return matchesStatus && matchesPayment;
+    }).toList();
+
+    if (filteredOrders != null) {
+      _modifiedOrders = filteredOrders;
       notifyListeners();
     }
   }
 
   void resetSort() {
+    _modifiedOrders = List.from(_orders!);
     notifyListeners();
   }
 
   void resetFilter() {
+    _modifiedOrders = List.from(_orders!);
     notifyListeners();
   }
 

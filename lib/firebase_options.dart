@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAlo5IC5AQjipSzv3C6SKHGhag_Ugvu5PE',
-    appId: '1:743303606576:android:8b541451807923379b18f5',
+    appId: '1:743303606576:android:3a636a38c9af10e89b18f5',
     messagingSenderId: '743303606576',
     projectId: 'mobile-admin-dashboard',
     storageBucket: 'mobile-admin-dashboard.firebasestorage.app',
@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBqk_aVyLyeh1ETyoByY8h4BOI7c32ntVI',
-    appId: '1:743303606576:ios:bfbff0c852f0989e9b18f5',
+    appId: '1:743303606576:ios:67b4227fe06011c99b18f5',
     messagingSenderId: '743303606576',
     projectId: 'mobile-admin-dashboard',
     storageBucket: 'mobile-admin-dashboard.firebasestorage.app',
-    iosBundleId: 'com.atowi7.instakit',
+    iosBundleId: 'com.instakit.servicesapp',
   );
 
 }

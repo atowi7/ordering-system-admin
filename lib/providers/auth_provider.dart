@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_routes.dart';
 import 'package:ordering_system_admin/models/user_model.dart';
 import 'package:ordering_system_admin/services/auth_services.dart';
+import 'package:ordering_system_admin/services/notification_services.dart';
 
 class AuthProvider extends ChangeNotifier {
   final _loginFormKey = GlobalKey<FormState>();
   final AuthServices _authServices = AuthServices();
+  final NotificationServices _notificationServices = NotificationServices();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -32,18 +34,17 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
 
-  Future<void> login(
-      BuildContext context) async {
+  Future<void> login(BuildContext context) async {
     if (_loginFormKey.currentState!.validate()) {
       _isLoading = true;
 
-      final UserModel? userModel =
-          await _authServices.login(_emailController.text, _passwordController.text);
+      final UserModel? userModel = await _authServices.login(
+          _emailController.text, _passwordController.text);
       if (userModel != null) {
+        await _notificationServices.initNotification();
         if (context.mounted) {
           Navigator.of(context).pushReplacementNamed(AppRoutes.home);
         }
-
       }
       _isLoading = false;
       notifyListeners();

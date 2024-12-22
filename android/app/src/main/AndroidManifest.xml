@@ -1,11 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.atowi7.instakit">
+    package="com.instakit.servicesapp">
     <application
         android:label="instakit"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
-            android:name="com.atowi7.instakit.MainActivity"
+            android:name="com.instakit.servicesapp.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:taskAffinity=""

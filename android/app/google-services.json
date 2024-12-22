@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:743303606576:android:8b541451807923379b18f5",
+        "mobilesdk_app_id": "1:743303606576:android:3a636a38c9af10e89b18f5",
         "android_client_info": {
-          "package_name": "com.atowi7.instakit"
+          "package_name": "com.instakit.servicesapp"
         }
       },
       "oauth_client": [],
