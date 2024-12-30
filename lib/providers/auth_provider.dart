@@ -1,23 +1,28 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_routes.dart';
 import 'package:ordering_system_admin/models/user_model.dart';
 import 'package:ordering_system_admin/services/auth_services.dart';
 import 'package:ordering_system_admin/services/notification_services.dart';
+import 'package:ordering_system_admin/services/sharedpreference_service.dart';
 
 class AuthProvider extends ChangeNotifier {
   final _loginFormKey = GlobalKey<FormState>();
   final AuthServices _authServices = AuthServices();
+  final SharedPreferenceService _sharedPreferenceService =
+      SharedPreferenceService();
   final NotificationServices _notificationServices = NotificationServices();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  UserModel? _userModel;
+  UserModel? _user;
   bool _isLoading = false;
 
   GlobalKey<FormState> get loginFormKey => _loginFormKey;
   TextEditingController get emailController => _emailController;
   TextEditingController get passwordController => _passwordController;
-  UserModel? get userModel => _userModel;
+  UserModel? get user => _user;
   bool get isLoading => _isLoading;
 
   String? validateName(String? value) {
@@ -51,13 +56,41 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> logout(BuildContext context) async {
-    bool isLogout = await _authServices.logout();
-    if (isLogout) {
-      if (context.mounted) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            AppRoutes.login, (Route<dynamic> route) => false);
-      }
+  void onRefresh() {
+    notifyListeners();
+  }
+
+ Future<UserModel?> getUser() async {
+    final userJson = await _sharedPreferenceService.getData('user');
+    if (userJson != null) {
+      _user = UserModel.fromJson(jsonDecode(userJson));
     }
+    return _user;
+  }
+
+
+  Future<void> logout(BuildContext context) async {
+    final success = await _authServices.logout();
+    if (success) {
+      _user = null;
+      Navigator.pushNamedAndRemoveUntil(
+          // ignore: use_build_context_synchronously
+          context,
+          AppRoutes.login,
+          (route) => false);
+    } else {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Logout failed. Please try again.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> clearAll() async {
+    await _sharedPreferenceService.clearAll();
+    _user = null;
+    notifyListeners();
   }
 }

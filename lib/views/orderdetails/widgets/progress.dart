@@ -16,7 +16,6 @@ class CustomProgress extends StatelessWidget {
     OrderDetailsManager manager = OrderDetailsManager(context: context);
     // print('Progress $orderStatusList == ${order.status}');
     return Container(
-      margin: const EdgeInsets.only(bottom: 5),
       width: double.infinity,
       color: Colors.white,
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
@@ -30,60 +29,106 @@ class CustomProgress extends StatelessWidget {
                 style: AppTheme.orderStatusProgressHead),
           ),
           const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              CustomStatus(
-                  context: context,
-                  title: orderStatusList[0]['name'],
-                  currentStatus: order.status!,
-                  isActive:
-                      manager.getStatusIndex(orderStatusList[0]['name']) <=
-                          manager.getStatusIndex(order.status!)),
-              const CustomSeparator(),
-              CustomStatus(
-                  context: context,
-                  title: orderStatusList[1]['name'],
-                  currentStatus: order.status!,
-                  isActive:
-                      manager.getStatusIndex(orderStatusList[1]['name']) <=
-                          manager.getStatusIndex(order.status!)),
-              const CustomSeparator(),
-              CustomStatus(
-                  context: context,
-                  title: orderStatusList[2]['name'],
-                  currentStatus: order.status!,
-                  isActive:
-                      manager.getStatusIndex(orderStatusList[2]['name']) <=
-                          manager.getStatusIndex(order.status!)),
-              const CustomSeparator(),
-              CustomStatus(
-                  context: context,
-                  title: orderStatusList[3]['name'],
-                  currentStatus: order.status!,
-                  isActive:
-                      manager.getStatusIndex(orderStatusList[3]['name']) <=
-                          manager.getStatusIndex(order.status!)),
-              const CustomSeparator(),
-              CustomStatus(
-                  context: context,
-                  title: orderStatusList[4]['name'],
-                  currentStatus: order.status!,
-                  isActive:
-                      manager.getStatusIndex(orderStatusList[4]['name']) <=
-                          manager.getStatusIndex(order.status!)),
-              const CustomSeparator(),
-              CustomStatus(
-                  context: context,
-                  title: orderStatusList[5]['name'],
-                  currentStatus: order.status!,
-                  isActive:
-                      manager.getStatusIndex(orderStatusList[5]['name']) <=
-                          manager.getStatusIndex(order.status!)),
-            ],
+          Container(
+            height: 50,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: orderStatusList.length,
+              itemBuilder: (context, index) {
+                bool showStatus = true;
+
+                if (orderStatusList[index]['name'] == 'Canceled' &&
+                    order.status != 'CANCELED') {
+                  showStatus = false;
+                }
+
+                if (order.serviceType != 'Delivery' &&
+                    orderStatusList[index]['name'] == 'Out for Delivery') {
+                  showStatus = false;
+                }
+
+                return showStatus
+                    ? CustomStatus(
+                        context: context,
+                        title: orderStatusList[index]['name'],
+                        currentStatus: order.status!,
+                        isActive: manager.getStatusIndex(
+                                orderStatusList[index]['name']) <=
+                            manager.getStatusIndex(order.status!))
+                    : SizedBox.shrink();
+              },
+              separatorBuilder: (context, index) {
+                bool showNextStatus = true;
+
+                if (orderStatusList[index + 1]['name'] == 'Canceled' &&
+                    order.status != 'CANCELED') {
+                  showNextStatus = false;
+                }
+
+                if (order.serviceType != 'Delivery' &&
+                    orderStatusList[index + 1]['name'] == 'Out for Delivery') {
+                  showNextStatus = false;
+                }
+
+                return showNextStatus
+                    ? const CustomSeparator()
+                    : const SizedBox.shrink();
+              },
+            ),
           ),
         ],
       ),
     );
   }
 }
+// [
+//               CustomStatus(
+//                   context: context,
+//                   title: orderStatusList[0]['name'],
+//                   currentStatus: order.status!,
+//                   isActive:
+//                       manager.getStatusIndex(orderStatusList[0]['name']) <=
+//                           manager.getStatusIndex(order.status!)),
+//               const CustomSeparator(),
+//               CustomStatus(
+//                   context: context,
+//                   title: orderStatusList[1]['name'],
+//                   currentStatus: order.status!,
+//                   isActive:
+//                       manager.getStatusIndex(orderStatusList[1]['name']) <=
+//                           manager.getStatusIndex(order.status!)),
+//               const CustomSeparator(),
+//               CustomStatus(
+//                   context: context,
+//                   title: orderStatusList[2]['name'],
+//                   currentStatus: order.status!,
+//                   isActive:
+//                       manager.getStatusIndex(orderStatusList[2]['name']) <=
+//                           manager.getStatusIndex(order.status!)),
+//               const CustomSeparator(),
+//               CustomStatus(
+//                   context: context,
+//                   title: orderStatusList[3]['name'],
+//                   currentStatus: order.status!,
+//                   isActive:
+//                       manager.getStatusIndex(orderStatusList[3]['name']) <=
+//                           manager.getStatusIndex(order.status!)),
+//               const CustomSeparator(),
+//               CustomStatus(
+//                   context: context,
+//                   title: orderStatusList[4]['name'],
+//                   currentStatus: order.status!,
+//                   isActive:
+//                       manager.getStatusIndex(orderStatusList[4]['name']) <=
+//                           manager.getStatusIndex(order.status!)),
+//               const CustomSeparator(),
+//               CustomStatus(
+//                   context: context,
+//                   title: orderStatusList[5]['name'],
+//                   currentStatus: order.status!,
+//                   isActive:
+//                       manager.getStatusIndex(orderStatusList[5]['name']) <=
+//                           manager.getStatusIndex(order.status!)),
+//             ],

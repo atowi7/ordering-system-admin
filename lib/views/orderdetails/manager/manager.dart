@@ -56,6 +56,9 @@ class OrderDetailsManager {
       case 'OUT_FOR_DELIVERY':
         nextStatus = 'COMPLETED';
         break;
+      case 'COMPLETED':
+        nextStatus = 'CANCELED';
+        break;
       default:
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

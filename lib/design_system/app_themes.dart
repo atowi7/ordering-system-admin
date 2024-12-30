@@ -34,7 +34,7 @@ class AppTheme {
     fontWeight: FontWeight.bold,
     color: AppColors.primaryColor,
   );
-  static const TextStyle homeHead = TextStyle(
+  static const TextStyle headText = TextStyle(
     fontSize: 28,
     fontWeight: FontWeight.bold,
     color: Colors.black,
@@ -144,12 +144,12 @@ class AppTheme {
     fontWeight: FontWeight.w900,
   );
   static const TextStyle orderDetailsOrderStatusTitleopt1 = TextStyle(
-    fontSize: 8,
+    fontSize: 8.5,
     fontWeight: FontWeight.w500,
     color: Colors.green,
   );
   static const TextStyle orderDetailsOrderStatusTitleopt2 = TextStyle(
-    fontSize: 8,
+    fontSize: 8.5,
     fontWeight: FontWeight.w500,
     color: Colors.grey,
   );
@@ -223,7 +223,7 @@ class AppTheme {
     color: Colors.green,
   );
   static const TextStyle errorText = TextStyle(
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: FontWeight.w900,
     color: Colors.red,
   );

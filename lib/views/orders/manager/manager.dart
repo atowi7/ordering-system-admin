@@ -2,22 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/providers/order_provider.dart';
 import 'package:provider/provider.dart';
 
-class HomeManager {
+class OrdersManager {
   final BuildContext context;
   late final OrderProvider _orderProvider;
   // late List<OrderModel>? orders;
   // List<OrderModel>? sortedOrders;
   late List<Map<String, dynamic>>? orderStatusList = [];
-  bool isRefresh = true;
+  // bool isRefresh = true;
 
-  HomeManager({required this.context}) {
+  OrdersManager({required this.context}) {
     _orderProvider = Provider.of<OrderProvider>(context, listen: false);
   }
 
   Future<void> loadData() async {
-    await _loadOrders();
     await _loadOrderStatuses();
-    isRefresh = false;
+    await _loadOrders();
+
+    // isRefresh = false;
+    _orderProvider.isRefresh = false;
+  }
+
+  Future<void> _loadOrderStatuses() async {
+    await _orderProvider.getOrderStatuses();
+    orderStatusList = _orderProvider.orderStatusList;
   }
 
   Future<void> _loadOrders() async {
@@ -25,36 +32,33 @@ class HomeManager {
     // orders = _orderProvider.orders;
   }
 
-  Future<void> _loadOrderStatuses() async {
-    await _orderProvider.getOrderStatuses();
-    orderStatusList = _orderProvider.orderStatusList;
-    print('_loadOrderStatuses() $orderStatusList');
-  }
-
   Future<void> onRefresh() async {
-    isRefresh = true;
+    // isRefresh = true;
+    _orderProvider.isRefresh = true;
     _orderProvider.onRefresh();
   }
 
   void sortOrders(String? selectedSort) {
-    isRefresh = false;
+    // isRefresh = false;
+     _orderProvider.isRefresh = false;
     _orderProvider.sortOrders(context, selectedSort);
   }
 
   void filterOrders(
       String? selectedFilterStatus, String? selectedFilterPayment) {
-    isRefresh = false;
+    // isRefresh = true;
+    _orderProvider.isRefresh = true;
     _orderProvider.filterOrders(
         context, selectedFilterStatus, selectedFilterPayment);
   }
 
   void resetSort() {
-    isRefresh = true;
+     _orderProvider.isRefresh = true;
     _orderProvider.resetSort();
   }
 
   void resetFilter() {
-    isRefresh = true;
+     _orderProvider.isRefresh = true;
     _orderProvider.resetFilter();
   }
 

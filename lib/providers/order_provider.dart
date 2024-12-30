@@ -3,14 +3,14 @@ import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
 import 'package:ordering_system_admin/services/order_service.dart';
-import 'package:ordering_system_admin/views/home/widgets/changeorderstatus_dialog.dart';
-import 'package:ordering_system_admin/views/home/widgets/sort_sheet.dart';
-import 'package:ordering_system_admin/views/home/widgets/filter_sheet.dart';
+import 'package:ordering_system_admin/views/orders/widgets/changeorderstatus_dialog.dart';
+import 'package:ordering_system_admin/views/orders/widgets/sort_sheet.dart';
+import 'package:ordering_system_admin/views/orders/widgets/filter_sheet.dart';
 
 class OrderProvider extends ChangeNotifier {
   OrderModel? _order;
   List<OrderModel>? _orders;
-  List<OrderModel>? _modifiedOrders;
+  List<OrderModel>? _sortedOrders;
   List<Map<String, dynamic>>? _orderStatusList;
 
   final orderService = OrderService();
@@ -20,20 +20,22 @@ class OrderProvider extends ChangeNotifier {
   String? _selectedStatus;
 
   // String? _selectedSort;
-  // String? _selectedFilterStatus;
-  // String? _selectedFilterPayment;
+  String? _selectedFilterStatus;
+  String? _selectedFilterPayment;
+
+  bool isRefresh = true;
 
   OrderModel? get order => _order;
   List<OrderModel>? get orders => _orders;
-  List<OrderModel>? get modifiedOrders => _modifiedOrders;
+  List<OrderModel>? get sortedOrders => _sortedOrders;
   List<Map<String, dynamic>>? get orderStatusList => _orderStatusList;
   // List<String> get paymentMethods => _paymentMethods;
   // bool _isLoading = false;
   // String? get selectedOrderId => _selectedOrderId;
   String? get selectedStatus => _selectedStatus;
-  // String? get selectedFilterStatus => _selectedFilterStatus;
-  // String? get selectedFilterPayment => _selectedFilterPayment;
   // String? get selectedSort => _selectedSort;
+  String? get selectedFilterStatus => _selectedFilterStatus;
+  String? get selectedFilterPayment => _selectedFilterPayment;
   // bool get isLoading => _isLoading;
 
   void setOrders(List<OrderModel> orders) {
@@ -41,7 +43,15 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getOrders() async {
-    final fetchedOrders = await orderService.getOrders();
+    if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
+      _selectedFilterStatus ??= _orderStatusList!.first['name'];
+    }
+    int statusIndex = _orderStatusList!.firstWhere(
+        (map) => map['name'] == _selectedFilterStatus,
+        orElse: () => {'value': 1})['value'] as int;
+
+    final fetchedOrders =
+        await orderService.getOrders(statusIndex, _selectedFilterPayment);
     if (fetchedOrders != null || fetchedOrders!.isNotEmpty) {
       _orders = fetchedOrders;
     }
@@ -54,7 +64,6 @@ class OrderProvider extends ChangeNotifier {
   Future<void> getOrderDetails(int orderId) async {
     try {
       final fetchedOrder = await orderService.getOrderDetails(orderId);
-      // print('fetchedOrder $fetchedOrder.]');
       if (fetchedOrder != null) {
         _order = fetchedOrder;
       }
@@ -70,24 +79,24 @@ class OrderProvider extends ChangeNotifier {
   void sortOrders(BuildContext context, String? selectedSort) {
     if (_orders != null) {
       if (selectedSort != null) {
-        if (_modifiedOrders!.length < _orders!.length) {
-          if (selectedSort == 'old_to_new') {
-            _modifiedOrders!.sort((a, b) {
-              // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
-              return a.createdAt.compareTo(b.createdAt);
-            });
-          } else if (selectedSort == 'new_to_old') {
-            _modifiedOrders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          }
-        } else {
-          if (selectedSort == 'old_to_new') {
-            _orders!.sort((a, b) {
-              // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
-              return a.createdAt.compareTo(b.createdAt);
-            });
-          } else if (selectedSort == 'new_to_old') {
-            _orders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          }
+        _sortedOrders = List.from(_orders!);
+        // if (_sortedOrders!.length < _orders!.length) {
+        //   if (selectedSort == 'old_to_new') {
+        //     _sortedOrders!.sort((a, b) {
+        //       // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
+        //       return a.createdAt.compareTo(b.createdAt);
+        //     });
+        //   } else if (selectedSort == 'new_to_old') {
+        //     _sortedOrders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        //   }
+        // } else {
+        if (selectedSort == 'old_to_new') {
+          _sortedOrders!.sort((a, b) {
+            // print('old_to_new ${ a.createdAt.compareTo(b.createdAt)}');
+            return a.createdAt.compareTo(b.createdAt);
+          });
+        } else if (selectedSort == 'new_to_old') {
+          _sortedOrders!.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         }
 
         // print('sorted ${orders!.first.id}');
@@ -127,40 +136,24 @@ class OrderProvider extends ChangeNotifier {
         ),
       );
       return;
-    }
-
-    final String? filterStatus =
-        selectedFilterStatus?.toLowerCase().trim().replaceAll('_', ' ');
-    final String? filterPayment = selectedFilterPayment?.toLowerCase().trim();
-
-    final filteredOrders = _orders?.where((order) {
-      final orderStatus =
-          order.status?.toLowerCase().trim().replaceAll('_', ' ');
-      final paymentMethod = order.paymentMethod.toLowerCase().trim();
-
-      print(' order.status $orderStatus $filterStatus');
-
-      final matchesStatus =
-          filterStatus == null || filterStatus.contains(orderStatus!);
-      final matchesPayment =
-          filterPayment == null || paymentMethod.contains(filterPayment);
-
-      return matchesStatus && matchesPayment;
-    }).toList();
-
-    if (filteredOrders != null) {
-      _modifiedOrders = filteredOrders;
+    } else {
+      _selectedFilterStatus = selectedFilterStatus;
+      _selectedFilterPayment = selectedFilterPayment;
+      isRefresh = true;
       notifyListeners();
     }
   }
 
   void resetSort() {
-    _modifiedOrders = List.from(_orders!);
+    _sortedOrders = List.from(_orders!);
     notifyListeners();
   }
 
   void resetFilter() {
-    _modifiedOrders = List.from(_orders!);
+    _selectedFilterStatus = null;
+    _selectedFilterPayment = null;
+    _sortedOrders = List.from(_orders!);
+
     notifyListeners();
   }
 
@@ -465,3 +458,28 @@ class OrderProvider extends ChangeNotifier {
   //   _selectedSort = newSort;
   //   notifyListeners();
   // }
+
+  //  final String? filterStatus =
+  //       selectedFilterStatus?.toLowerCase().trim().replaceAll('_', ' ');
+  //   final String? filterPayment = selectedFilterPayment?.toLowerCase().trim();
+  //   _sortedOrders ??= _orders;
+
+  //   final filteredOrders = _orders?.where((order) {
+  //     final orderStatus =
+  //         order.status?.toLowerCase().trim().replaceAll('_', ' ');
+  //     final paymentMethod = order.paymentMethod.toLowerCase().trim();
+
+  //     print(' order.status $orderStatus $filterStatus');
+
+  //     final matchesStatus =
+  //         filterStatus == null || filterStatus.contains(orderStatus!);
+  //     final matchesPayment =
+  //         filterPayment == null || paymentMethod.contains(filterPayment);
+
+  //     return matchesStatus && matchesPayment;
+  //   }).toList();
+
+  //   if (filteredOrders != null) {
+  //     _sortedOrders = filteredOrders;
+  //     notifyListeners();
+  //   }

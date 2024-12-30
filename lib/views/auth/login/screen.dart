@@ -12,8 +12,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AuthManager authManager = AuthManager(context);
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Form(
           key: authManager.authProvider.loginFormKey,
@@ -61,7 +60,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           )),
-    ));
+    );
   }
 }
  // TextFormField(

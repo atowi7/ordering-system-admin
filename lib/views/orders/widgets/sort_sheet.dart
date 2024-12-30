@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
-import 'package:ordering_system_admin/views/home/manager/manager.dart';
-import 'package:ordering_system_admin/views/home/widgets/sort_btn.dart';
-import 'package:ordering_system_admin/views/home/widgets/sort_opt.dart';
+import 'package:ordering_system_admin/views/orders/manager/manager.dart';
+import 'package:ordering_system_admin/views/orders/widgets/sort_btn.dart';
+import 'package:ordering_system_admin/views/orders/widgets/sort_opt.dart';
 
 class SortBottomSheet extends StatefulWidget {
   const SortBottomSheet({super.key});
@@ -16,7 +16,7 @@ class _SortBottomSheetState extends State<SortBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    HomeManager manager = HomeManager(context: context);
+    OrdersManager manager = OrdersManager(context: context);
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

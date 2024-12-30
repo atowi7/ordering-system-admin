@@ -1,92 +1,59 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
-import 'package:ordering_system_admin/design_system/app_images.dart';
-import 'package:ordering_system_admin/design_system/app_text.dart';
-import 'package:ordering_system_admin/design_system/app_themes.dart';
-import 'package:ordering_system_admin/providers/order_provider.dart';
-import 'package:ordering_system_admin/views/home/widgets/heading.dart';
-import 'package:ordering_system_admin/views/home/widgets/homeappbar.dart';
-import 'package:ordering_system_admin/views/home/widgets/orderlist.dart';
-import 'package:ordering_system_admin/views/home/widgets/sort_filter.dart';
-import 'package:ordering_system_admin/views/home/manager/manager.dart';
-import 'package:provider/provider.dart';
+import 'package:ordering_system_admin/views/notification/screen.dart';
+import 'package:ordering_system_admin/views/orders/screen.dart';
+import 'package:ordering_system_admin/views/profile/screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    HomeManager manager = HomeManager(context: context);
-    return SafeArea(
-      child: Scaffold(
-          appBar: const HomeAppBar(),
-          backgroundColor: AppColors.backgroundColor,
-          body: Consumer<OrderProvider>(builder: (_, provider, ___) {
-            print('manager.isRefresh ${manager.isRefresh}');
-            return RefreshIndicator(
-                onRefresh: () async {
-                  manager.onRefresh();
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Heading(title: AppText.homeTitle),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                    manager.isRefresh
-                        ? FutureBuilder(
-                            future: manager.loadData(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Center(
-                                      child: Lottie.asset(
-                                        AppImages.loading,
-                                        delegates: LottieDelegates(values: [
-                                          ValueDelegate.color(const [
-                                            'Shape Layer 1',
-                                            'Rectangle',
-                                            'Fill 1'
-                                          ], value: AppColors.primaryColor),
-                                        ]),
-                                      ),
-                                    ),
-                                    Text('Please wait ...',
-                                        style: AppTheme.loadText)
-                                  ],
-                                );
-                              } else if (snapshot.connectionState ==
-                                  ConnectionState.done) {
-                                return OrderList(
-                                    orders: provider.orders!,
-                                    orderStatusList: provider.orderStatusList!);
-                              } else if (snapshot.hasError) {
-                                return Text('Error ${snapshot.error}',
-                                    style: AppTheme.errorText);
-                              }
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-                              return const Center(
-                                child: Text(
-                                  'No order found',
-                                  style: AppTheme.errorText,
-                                ),
-                              );
-                            })
-                        : OrderList(
-                            orders: provider.modifiedOrders!,
-                            orderStatusList: provider.orderStatusList!),
-                  ],
-                ));
-          }),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: SortFilter(
-              onSortPressed: () => manager.showBottomSheetForSort(),
-              onFilterPressed: () => manager.showBottomSheetForFilter())),
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _screens = <Widget>[
+    OrdersScreen(),
+    ProfileScreen(),
+    NotificationScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        backgroundColor: AppColors.backgroundColor,
+        selectedItemColor: AppColors.primaryColor,
+        selectedFontSize: 17,
+        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedItemColor: Colors.grey,
+        unselectedFontSize: 16.5,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded),
+            label: 'Orders',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_rounded),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications_rounded),
+            label: 'Notifications',
+          ),
+        ],
+      ),
     );
   }
 }

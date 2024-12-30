@@ -32,6 +32,8 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 8.0)
     - nanopb (~> 3.30910.0)
   - Flutter (1.0.0)
+  - flutter_ringtone_player (0.0.1):
+    - Flutter
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
@@ -64,6 +66,9 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - PromisesObjC (2.4.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -75,6 +80,8 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_ringtone_player (from `.symlinks/plugins/flutter_ringtone_player/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
@@ -97,6 +104,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_ringtone_player:
+    :path: ".symlinks/plugins/flutter_ringtone_player/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   url_launcher_ios:
@@ -111,9 +122,11 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 6ef4a1c7eb2a61ee1f74727d7f6ce2e72acf1414
   FirebaseMessaging: f8a160d99c2c2e5babbbcc90c4a3e15db036aee2
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_ringtone_player: 15eba85187230b87b2512f0e1b92225618bc03e7
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleUtilities: 26a3abef001b6533cf678d3eb38fd3f614b7872d
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe

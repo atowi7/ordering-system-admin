@@ -9,9 +9,9 @@ class Recite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 5),
+      // margin: const EdgeInsets.only(bottom: 5),
       // height: MediaQuery.of(context).size.height * .12,
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       color: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

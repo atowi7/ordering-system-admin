@@ -16,11 +16,12 @@ class CustomStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // print('isActive $title $isActive');
+   
     return Column(
       children: [
         Container(
-          width: 25,
-          height: 25,
+          width: 30,
+          height: 30,
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isActive ? Colors.green : Colors.grey),
@@ -28,7 +29,7 @@ class CustomStatus extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         Text(
-          title,
+         title,
           style: isActive
               ? AppTheme.orderDetailsOrderStatusTitleopt1
               : AppTheme.orderDetailsOrderStatusTitleopt2,

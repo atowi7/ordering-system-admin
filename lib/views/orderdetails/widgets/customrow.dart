@@ -10,8 +10,8 @@ class CustomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // height: MediaQuery.of(context).size.height * .1,
-      margin: const EdgeInsets.only(bottom: 5),
-      padding: const EdgeInsets.all(15),
+      // margin: const EdgeInsets.only(bottom: 5),
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       color: Colors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -20,7 +20,7 @@ class CustomItem extends StatelessWidget {
             title,
             style: AppTheme.orderDetialsItemTitle,
           ),
-          Text(text.length > 40 ? '${text.substring(0, 40)}...' : text, style: AppTheme.orderDetialsItemSubTitle),
+          Text(text.length > 30 ? '${text.substring(0, 30)}...' : text, style: AppTheme.orderDetialsItemSubTitle),
         ],
       ),
     );
