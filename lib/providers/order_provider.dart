@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
 import 'package:ordering_system_admin/models/order_model.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:ordering_system_admin/services/order_service.dart';
 import 'package:ordering_system_admin/views/orders/widgets/changeorderstatus_dialog.dart';
 import 'package:ordering_system_admin/views/orders/widgets/sort_sheet.dart';
@@ -42,16 +45,96 @@ class OrderProvider extends ChangeNotifier {
     _orders = orders;
   }
 
-  Future<void> getOrders() async {
-    if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
-      _selectedFilterStatus ??= _orderStatusList!.first['name'];
-    }
-    int statusIndex = _orderStatusList!.firstWhere(
-        (map) => map['name'] == _selectedFilterStatus,
-        orElse: () => {'value': 1})['value'] as int;
+  StreamSubscription<List<OrderModel>>? _orderSubscription;
+  final StreamController<List<OrderModel>> _orderStreamController =
+      StreamController<List<OrderModel>>.broadcast();
+
+  Stream<List<OrderModel>> get ordersStream => _orderStreamController.stream;
+
+  // Future<void> getOrders(BuildContext context) async {
+  //    print('selectedFilterStatus $_selectedFilterStatus');
+  //   if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
+  //     _selectedFilterStatus ??= _orderStatusList!.first['name'];
+     
+  //   }
+  //   int statusIndex = _orderStatusList!.firstWhere(
+  //       (map) => map['name'] == _selectedFilterStatus,
+  //       orElse: () => {'value': 1})['value'] as int;
+  //       print('statusIndex $statusIndex');
+  //   _orderSubscription?.cancel(); 
+  //   _orderSubscription = orderService
+  //       .getOrders(context, statusIndex, _selectedFilterPayment)
+  //       .listen(
+  //     (orders) {
+  //       print('StreamstatusIndex $statusIndex');
+  //       if (_orders == null || _orders!.length < orders.length) {
+  //         FlutterRingtonePlayer().play(
+  //           android: AndroidSounds.notification,
+  //           ios: IosSounds.glass,
+  //           looping: false,
+  //           volume: 0.5,
+  //           asAlarm: false,
+  //         );
+       
+  //       }
+  // //  _orders = orders;
+  // //         _sortedOrders = _orders;
+  // //         _orderStreamController.add(orders);
+  // //         notifyListeners();
+        
+  //     },
+  //   );
+  // }
+
+  @override
+  void dispose() {
+    _orderSubscription?.cancel();
+    _orderSubscription = null;
+    _orderStreamController.close();
+
+    super.dispose();
+  }
+  // Future<void> getOrders(BuildContext context) async {
+  //   if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
+  //     _selectedFilterStatus ??= _orderStatusList!.first['name'];
+  //   }
+  //   int statusIndex = _orderStatusList!.firstWhere(
+  //       (map) => map['name'] == _selectedFilterStatus,
+  //       orElse: () => {'value': 1})['value'] as int;
+  //   _orderSubscription?.cancel(); // Cancel previous subscription if any
+  //   _orderSubscription = orderService
+  //       .getOrders(context, statusIndex, _selectedFilterPayment)
+  //       .listen(
+  //     (orders) {
+  //       _orders = orders;
+  //       _sortedOrders = _orders; // Initially set sortedOrders to orders
+  //       _orderStreamController.add(orders); // Add orders to stream
+  //       notifyListeners(); //
+  //       // Play sound on initial data load or updates
+  //       if (orders.isNotEmpty) {
+  //         FlutterRingtonePlayer().play(
+  //           android: AndroidSounds.notification,
+  //           ios: IosSounds.glass,
+  //           looping: false,
+  //           volume: 0.5,
+  //           asAlarm: false,
+  //         );
+  //         // isRefresh = false; // Reset refresh flag after initial load
+  //       }
+  //     },
+  //   );
+  // }
+
+  Future<void> getOrders(BuildContext context) async {
+  if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
+    _selectedFilterStatus ??= _orderStatusList!.first['name'];
+  }
+  int statusIndex = _orderStatusList!.firstWhere(
+      (map) => map['name'] == _selectedFilterStatus,
+      orElse: () => {'value': 1})['value'] as int;
 
     final fetchedOrders =
-        await orderService.getOrders(statusIndex, _selectedFilterPayment);
+        await orderService.getOrders(context,statusIndex, _selectedFilterPayment);
     if (fetchedOrders != null || fetchedOrders!.isNotEmpty) {
       _orders = fetchedOrders;
     }

@@ -217,6 +217,11 @@ class AppTheme {
     fontWeight: FontWeight.w500,
     color: Color.fromRGBO(117, 117, 117, 1),
   );
+  static const TextStyle cardItem = TextStyle(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: Color.fromRGBO(255, 255, 255, 1),
+  );
   static const TextStyle successText = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.w900,

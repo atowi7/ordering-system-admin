@@ -13,7 +13,7 @@ class NotificationManager {
   }
 
   Future<void> loadData() async {
-    await _notificationProvider.getNotifiations();
+    await _notificationProvider.getNotifications();
   }
 
   Future<void> onRefresh() async {

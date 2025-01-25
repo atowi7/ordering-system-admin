@@ -90,8 +90,8 @@ class OrderDetailScreen extends StatelessWidget {
                     SizedBox(
                       height: screenSize.height * 0.07,
                       child: CustomItem(
-                          title: 'Items',
-                          text: '${manager.order!.items.length}'),
+                          title: 'Item',
+                          text: '${manager.order!.items[0]['product']['name']}'),
                     ),
                   ],
                 );

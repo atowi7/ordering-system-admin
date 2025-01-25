@@ -10,10 +10,9 @@ import 'package:ordering_system_admin/services/sharedpreference_service.dart';
 class AuthServices {
   final SharedPreferenceService _sharedPreferenceService =
       SharedPreferenceService();
-  final NotificationServices _notificationServices = NotificationServices();
 
   Future<UserModel?> login(String email, String password) async {
-    final String? token = await _notificationServices.getDeviceToken();
+    final String? token = await NotificationServices.instance.getDeviceToken();
 
     final response = await http.post(Uri.parse(AppLinks.login),
         // headers: {
@@ -31,7 +30,7 @@ class AuthServices {
       // final String username = data['data']['admin']['name'];
       // final String email = data['data']['admin']['email'];
       // final String createdAt = data['data']['admin']['created_at'];
-      final  user = data['data']['admin'];
+      final user = data['data']['admin'];
       final String token = data['data']['authorization']['token'];
 
       // print('auth $username');
@@ -39,8 +38,7 @@ class AuthServices {
       // print('auth $createdAt');
       print('auth $token');
 
-      await _sharedPreferenceService.storeData(
-          'user', jsonEncode(user));
+      await _sharedPreferenceService.storeData('user', jsonEncode(user));
       await _sharedPreferenceService.storeData(
           'bearerToken', jsonEncode(token));
 
@@ -56,12 +54,13 @@ class AuthServices {
     final response = await http.post(
       Uri.parse(AppLinks.logout),
       headers: {
-        'Authorization': 'Bearer ${token.replaceAll('"', '')}',        },
+        'Authorization': 'Bearer ${token.replaceAll('"', '')}',
+      },
     );
 
     if (response.statusCode == 200) {
-     bool isCleared = await _sharedPreferenceService.clearAll();
-     print( 'isCleared $isCleared');
+      bool isCleared = await _sharedPreferenceService.clearAll();
+      print('isCleared $isCleared');
       return true;
     } else {
       return false;

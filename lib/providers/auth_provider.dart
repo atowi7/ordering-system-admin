@@ -12,7 +12,6 @@ class AuthProvider extends ChangeNotifier {
   final AuthServices _authServices = AuthServices();
   final SharedPreferenceService _sharedPreferenceService =
       SharedPreferenceService();
-  final NotificationServices _notificationServices = NotificationServices();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -46,7 +45,8 @@ class AuthProvider extends ChangeNotifier {
       final UserModel? userModel = await _authServices.login(
           _emailController.text, _passwordController.text);
       if (userModel != null) {
-        await _notificationServices.initNotification();
+        await NotificationServices.instance.initialize();
+        // await _notificationServices.subscribeToTopic('order_admin');
         if (context.mounted) {
           Navigator.of(context).pushReplacementNamed(AppRoutes.home);
         }
@@ -60,14 +60,13 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
- Future<UserModel?> getUser() async {
+  Future<UserModel?> getUser() async {
     final userJson = await _sharedPreferenceService.getData('user');
     if (userJson != null) {
       _user = UserModel.fromJson(jsonDecode(userJson));
     }
     return _user;
   }
-
 
   Future<void> logout(BuildContext context) async {
     final success = await _authServices.logout();

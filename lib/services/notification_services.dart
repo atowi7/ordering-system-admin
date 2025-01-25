@@ -1,82 +1,200 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
-import 'package:ordering_system_admin/design_system/app_links.dart';
-import 'package:ordering_system_admin/models/notification_model.dart';
-import 'package:http/http.dart' as http;
-import 'package:ordering_system_admin/services/sharedpreference_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:ordering_system_admin/design_system/app_routes.dart';
+import 'package:ordering_system_admin/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await NotificationServices.instance._setupFlutterNotifications();
+  await NotificationServices.instance._showNotification(message);
+  await NotificationServices.instance._saveNotification(message);
+}
 
 class NotificationServices {
-  final SharedPreferenceService _sharedPreferenceService =
-      SharedPreferenceService();
+  NotificationServices._();
+  static final NotificationServices instance = NotificationServices._();
   final _firebaseMessaging = FirebaseMessaging.instance;
+  final _localNotifications = FlutterLocalNotificationsPlugin();
+  late AndroidNotificationChannel channel;
+  bool isFlutterLocalNotificationsInitialized = false;
 
-  Future<void> initNotification() async {
-    await _firebaseMessaging.requestPermission();
+  Future<void> initialize() async {
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+    // Request permission
+    await _requestPermission();
+
+    // Setup message handlers
+    await _setupMessageHandlers();
+
+    // Get FCM token
+    await getDeviceToken();
+  }
+
+  Future<void> _requestPermission() async {
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
   Future<String?> getDeviceToken() async {
-    await _firebaseMessaging.requestPermission();
     String? token = await _firebaseMessaging.getToken();
+    print('Device token: $token');
     return token;
   }
 
-  Future<List<NotificationModel>?>? getNotifiations() async {
-    final token = await _sharedPreferenceService.getData('bearerToken');
-    if (token == null) {
-      return null;
-    }
-
-    final statuses = [1, 2, 3, 4, 5, 6];
-    final List<NotificationModel> allOrders = [];
-
-    for (final status in statuses) {
-      final response = await http.get(
-        Uri.parse('${AppLinks.orders}?status=$status'),
-        headers: {
-'Authorization': 'Bearer ${token.replaceAll('"', '')}',        },
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonData = jsonDecode(response.body);
-
-        if (jsonData['success']) {
-          List<dynamic> ordersData = jsonData['data']['orders'];
-          final List<NotificationModel> orders = ordersData.map((order) {
-            // print('orderData$order');
-
-            return NotificationModel.fromJson(order);
-          }).toList();
-
-          allOrders.addAll(orders);
-        } else {
-          // final errorMessage = jsonData['message'] ?? 'Unknown error';
-          // print('Error: $errorMessage (Status Code: ${response.statusCode})');
-          return null;
-        }
-      } else {
-        return null;
-      }
-    }
-    return allOrders;
+  Future<void> subscribeToTopic(String topic) async {
+    await _firebaseMessaging.subscribeToTopic(topic);
+    print('Subscribed to topic: $topic');
   }
 
-  void handleMessage(RemoteMessage? message) {
-    if (message == null) return;
+  Future<void> unsubscribeFromTopic(String topic) async {
+    await _firebaseMessaging.unsubscribeFromTopic(topic);
+    print('Unsubscribed from topic: $topic');
+  }
 
-    FlutterRingtonePlayer().play(
-      android: AndroidSounds.notification,
-      ios: IosSounds.glass,
-      looping: true,
-      volume: 0.1,
-      asAlarm: false,
+  void _handleMessage(RemoteMessage message) {
+    print('Handling a message: ${message.messageId}');
+    navigatorKey.currentState?.pushNamed(AppRoutes.home);
+  }
+
+  // static Future<void> _firebaseMessagingBackgroundHandler(
+  //     RemoteMessage message) async {
+  //   print("Handling a background message: ${message.messageId}");
+  // }
+
+  Future<void> _setupFlutterNotifications() async {
+    if (isFlutterLocalNotificationsInitialized) {
+      return;
+    }
+    channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'High Importance Notifications', // title
+      description:
+          'This channel is used for important notifications.', // description
+      importance: Importance.high,
     );
+
+    await _localNotifications
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    const initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    // ios setup
+    final initializationSettingsDarwin = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      // onDidReceiveLocalNotification: (id, title, body, payload) async {
+      //   print('Received local notification while app is in foreground!');
+      // },
+    );
+
+    final initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+    );
+
+    // flutter notification setup
+    await _localNotifications.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) {},
+    );
+
+    isFlutterLocalNotificationsInitialized = true;
   }
 
-  Future handleBackgroundNotification() async {
-    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    // FirebaseMessaging.onBackgroundMessage(handleMessage);
+  Future<void> _showNotification(RemoteMessage message) async {
+        await _setupFlutterNotifications(); 
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      await _localNotifications.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: const DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        payload: message.data.toString(),
+      );
+    }
+  }
+
+  Future<void> _setupMessageHandlers() async {
+    // Handle foreground notifications
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      print('Received a message while in the foreground!');
+      print('Message data: ${message.data}');
+
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+        await _showNotification(message);
+        _saveNotification(message);
+      }
+    });
+
+    // Handle notifications when the app is opened from a terminated state
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      _handleMessage(initialMessage);
+    }
+
+    // Handle notifications when the app is opened from the background
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  Future<void> _saveNotification(RemoteMessage message) async {
+    final prefs = await SharedPreferences.getInstance();
+    final notifications = prefs.getStringList('notifications') ?? [];
+    final notificationData = {
+      'title': message.notification?.title,
+      'body': message.notification?.body,
+    };
+    notifications.add(jsonEncode(notificationData));
+    await prefs.setStringList('notifications', notifications);
+  }
+
+  Future<List<Map<String, String>>> getSavedNotifications() async {
+    final prefs = await SharedPreferences.getInstance();
+    final notifications = prefs.getStringList('notifications') ?? [];
+    return notifications
+        .map((e) => Map<String, String>.from(jsonDecode(e)))
+        .toList();
+  }
+
+  Future<void> deleteNotification(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    final notifications = prefs.getStringList('notifications') ?? [];
+    if (index >= 0 && index < notifications.length) {
+      notifications.removeAt(index);
+      await prefs.setStringList('notifications', notifications);
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:ordering_system_admin/design_system/app_colors.dart';
 import 'package:ordering_system_admin/design_system/app_images.dart';
 import 'package:ordering_system_admin/design_system/app_text.dart';
 import 'package:ordering_system_admin/design_system/app_themes.dart';
+import 'package:ordering_system_admin/models/order_model.dart';
 import 'package:ordering_system_admin/providers/order_provider.dart';
 import 'package:ordering_system_admin/shared/heading.dart';
 import 'package:ordering_system_admin/views/orders/widgets/orderlist.dart';
@@ -67,11 +68,8 @@ class OrdersScreen extends StatelessWidget {
                                 ? OrderList(
                                     orders: provider.orders!,
                                     orderStatusList: provider.orderStatusList!)
-                                : const Center(
-                                    child: Text(
-                                      'No order found',
-                                      style: AppTheme.errorText,
-                                    ),
+                                : Center(
+                                    child: Lottie.asset(AppImages.nodata),
                                   );
                           } else if (snapshot.hasError) {
                             return Text('Error ${snapshot.error}',
@@ -93,9 +91,9 @@ class OrdersScreen extends StatelessWidget {
       }),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SortFilter(
-          onSortPressed: () => manager.showBottomSheetForSort(),
-          onFilterPressed: () => manager.showBottomSheetForFilter()),
-      // bottomNavigationBar: CustomBottomNavigationBar(),
+        onSortPressed: () => manager.showBottomSheetForSort(),
+        onFilterPressed: () => manager.showBottomSheetForFilter(),
+      ),
     );
   }
 }

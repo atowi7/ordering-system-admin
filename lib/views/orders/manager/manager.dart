@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ordering_system_admin/models/order_model.dart';
 import 'package:ordering_system_admin/providers/order_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -22,13 +23,15 @@ class OrdersManager {
     _orderProvider.isRefresh = false;
   }
 
+  Stream<List<OrderModel>> get ordersStream => _orderProvider.ordersStream;
+
   Future<void> _loadOrderStatuses() async {
     await _orderProvider.getOrderStatuses();
     orderStatusList = _orderProvider.orderStatusList;
   }
 
   Future<void> _loadOrders() async {
-    await _orderProvider.getOrders();
+    await _orderProvider.getOrders(context);
     // orders = _orderProvider.orders;
   }
 
@@ -40,7 +43,7 @@ class OrdersManager {
 
   void sortOrders(String? selectedSort) {
     // isRefresh = false;
-     _orderProvider.isRefresh = false;
+    _orderProvider.isRefresh = false;
     _orderProvider.sortOrders(context, selectedSort);
   }
 
@@ -53,12 +56,12 @@ class OrdersManager {
   }
 
   void resetSort() {
-     _orderProvider.isRefresh = true;
+    _orderProvider.isRefresh = true;
     _orderProvider.resetSort();
   }
 
   void resetFilter() {
-     _orderProvider.isRefresh = true;
+    _orderProvider.isRefresh = true;
     _orderProvider.resetFilter();
   }
 

@@ -3,19 +3,26 @@ import 'package:ordering_system_admin/models/notification_model.dart';
 import 'package:ordering_system_admin/services/notification_services.dart';
 
 class NotificationProvider extends ChangeNotifier {
-  NotificationModel? _notification;
   List<NotificationModel>? _notifications;
 
-  NotificationModel? get notification => _notification;
   List<NotificationModel>? get notifications => _notifications;
 
-  final notificationService = NotificationServices();
+  Future<void> getNotifications() async {
+    final fetchedData =
+        await NotificationServices.instance.getSavedNotifications();
+    _notifications = fetchedData.map((data) {
+      return NotificationModel(
+        title: data['title'] ?? '',
+        text: data['body'] ?? '',
+        createdAt: DateTime.now().toIso8601String().substring(0, 10),
+      );
+    }).toList();
+    notifyListeners();
+  }
 
-  Future<void> getNotifiations() async {
-    final fetchedData = await notificationService.getNotifiations();
-    if (fetchedData != null || fetchedData!.isNotEmpty) {
-      _notifications = fetchedData;
-    }
+  Future<void> deleteNotification(int index) async {
+    await NotificationServices.instance.deleteNotification(index);
+    await getNotifications();
   }
 
   void onRefresh() {
