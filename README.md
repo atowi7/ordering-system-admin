@@ -32,8 +32,10 @@ This is an admin app for managing orders, built with Flutter and Provider for st
 
 ### Login screen: 
 ![image](images/orderSystemAdminAppLoginScreen.png)
-### Home screen: 
-![image](images/orderSystemAdminAppHomeScreen.png)
+### Order screen: 
+![image](images/orderSystemAdminAppOrderScreen.png)
+### Profile screen: 
+![image](images/orderSystemAdminAppProfileScreen.png)
 ### Order Change Stats screen:
  ![image](images/orderSystemAdminAppChangeStatusDialogScreen.png)
 ### Order details screen: 

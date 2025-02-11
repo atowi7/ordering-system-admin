@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_colors.dart';
@@ -11,6 +12,11 @@ import 'package:ordering_system_admin/services/sharedpreference_service.dart';
 class OrderService {
   final SharedPreferenceService _sharedPreferenceService =
       SharedPreferenceService();
+
+  String getDeviceLanguage() {
+    final locale = ui.window.locale;
+    return locale.languageCode;
+  }
 
   // Stream<List<OrderModel>> getOrders(
   //     BuildContext context, int status, String? payment) async* {
@@ -76,12 +82,20 @@ class OrderService {
   //   }
   // }
 
-  Future<List<OrderModel>?>? getOrders(BuildContext context, int status, String? payment) async {
-    final String token = await _sharedPreferenceService.getData('bearerToken');
+  Future<List<OrderModel>?>? getOrders(
+      BuildContext context, int status, String? payment) async {
+    final String deviceLanguage = getDeviceLanguage();
+    payment == null
+        ? print('payment ${payment}')
+        : print('payment ${payment.toLowerCase().trim()}');
+    final String bearerToken =
+        await _sharedPreferenceService.getData('bearerToken');
     final response = await http.get(
       Uri.parse("${AppLinks.orders}?status=$status&page=1"),
       headers: {
-        'Authorization': 'Bearer ${token.replaceAll('"', '')}',
+        'Authorization': 'Bearer ${bearerToken.replaceAll('"', '')}',
+        'Accept': 'application/json',
+        'Accept-Language': deviceLanguage,
       },
     );
     // print('Response status: ${response.statusCode}');
@@ -92,56 +106,64 @@ class OrderService {
 
       if (jsonData['success']) {
         List<dynamic> ordersData = jsonData['data']['orders'];
-        final List<OrderModel> orders = ordersData.map((order) {
-          // print('orderData$order');
+        List<OrderModel> orders = ordersData.map((order) {
+          print('orderData$order');
 
           return OrderModel.fromJson(order);
         }).toList();
+
+        if (payment != null) {
+          orders = orders
+              .where((order) =>
+                  order.paymentMethod.toLowerCase().trim() ==
+                  payment.toLowerCase().trim())
+              .toList();
+        }
 
         return orders;
       } else {
         final errorMessage = jsonData['message'] ?? 'Unknown error';
         // print('Error: $errorMessage (Status Code: ${response.statusCode})');
         if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(
-                     errorMessage,
-                      style: AppTheme.errorText,
-                    ),
-                    backgroundColor: AppColors.primaryColor),
-              );
-
-            }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text(
+                  errorMessage,
+                  style: AppTheme.errorText,
+                ),
+                backgroundColor: AppColors.primaryColor),
+          );
+        }
         return null;
       }
     } else {
       if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                    content: Text(
-                      'An error occurred. Please try again later.',
-                      style: AppTheme.errorText,
-                    ),
-                    backgroundColor: AppColors.primaryColor),
-              );
-
-            }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+                'An error occurred. Please try again later.',
+                style: AppTheme.errorText,
+              ),
+              backgroundColor: AppColors.primaryColor),
+        );
       }
-      return null;
     }
+    return null;
+  }
 
   Future<OrderModel?>? getOrderDetails(int orderId) async {
-    final token = await _sharedPreferenceService.getData('bearerToken');
-    if (token == null) {
+    final bearerToken = await _sharedPreferenceService.getData('bearerToken');
+    if (bearerToken == null) {
       return null;
     }
-
+    final String deviceLanguage = getDeviceLanguage();
     final response = await http.get(
       Uri.parse('${AppLinks.orders}/$orderId'),
       headers: {
         // 'Authorization': 'Bearer $token',
-        'Authorization': 'Bearer ${token.replaceAll('"', '')}',
+        'Authorization': 'Bearer ${bearerToken.replaceAll('"', '')}',
+        'Accept': 'application/json',
+        'Accept-Language': deviceLanguage,
       },
     );
 
@@ -170,8 +192,18 @@ class OrderService {
   }
 
   Future<List<Map<String, dynamic>>?> getOrderStatuses() async {
+    final bearerToken = await _sharedPreferenceService.getData('bearerToken');
+    final String deviceLanguage = getDeviceLanguage();
+    if (bearerToken == null) {
+      return null;
+    }
     final response = await http.get(
       Uri.parse(AppLinks.orderStatuses),
+      headers: {
+        'Authorization': 'Bearer ${bearerToken.replaceAll('"', '')}',
+        'Accept': 'application/json',
+        'Accept-Language': deviceLanguage,
+      },
     );
     if (response.statusCode == 200) {
       try {
@@ -202,14 +234,17 @@ class OrderService {
   }
 
   Future<bool> changeOrderStatus(int orderId, int newStatus) async {
-    final token = await _sharedPreferenceService.getData('bearerToken');
-    if (token == null) {
+    final bearerToken = await _sharedPreferenceService.getData('bearerToken');
+    final String deviceLanguage = getDeviceLanguage();
+    if (bearerToken == null) {
       return false;
     }
 
     final response =
         await http.post(Uri.parse(AppLinks.orderStatusUpdate), headers: {
-      'Authorization': 'Bearer ${token.replaceAll('"', '')}',
+      'Authorization': 'Bearer ${bearerToken.replaceAll('"', '')}',
+      'Accept': 'application/json',
+      'Accept-Language': deviceLanguage,
     }, body: {
       "order_id": '$orderId',
       "new_status": '$newStatus'

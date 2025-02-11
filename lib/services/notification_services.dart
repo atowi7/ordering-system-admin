@@ -1,16 +1,17 @@
-import 'dart:convert';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:ordering_system_admin/design_system/app_routes.dart';
 import 'package:ordering_system_admin/main.dart';
+import 'package:ordering_system_admin/services/auth_services.dart';
+import 'package:ordering_system_admin/services/sharedpreference_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await NotificationServices.instance._setupFlutterNotifications();
   await NotificationServices.instance._showNotification(message);
-  await NotificationServices.instance._saveNotification(message);
+
+  // await NotificationServices.instance._saveNotification(message);
 }
 
 class NotificationServices {
@@ -31,7 +32,7 @@ class NotificationServices {
     await _setupMessageHandlers();
 
     // Get FCM token
-    await getDeviceToken();
+    // await getDeviceToken();
   }
 
   Future<void> _requestPermission() async {
@@ -50,8 +51,28 @@ class NotificationServices {
 
   Future<String?> getDeviceToken() async {
     String? token = await _firebaseMessaging.getToken();
-    print('Device token: $token');
+    print('getDeviceToken() : $token');
+    if (token != null) {
+      await _storeToken(token);
+    }
     return token;
+  }
+  
+  // Save and update token on server with a current timestamp.
+  Future<void> _storeToken(String token) async {
+    final SharedPreferenceService sharedPreferenceService =
+        SharedPreferenceService();
+    await sharedPreferenceService.storeData('fcmToken', token);
+    await sharedPreferenceService.storeData(
+        'lastTokenUpdate', DateTime.now().millisecondsSinceEpoch);
+    await _updateTokenOnServer(token);
+    print(
+        '_storeToken() : lastTokenUpdate ${DateTime.now().millisecondsSinceEpoch}');
+  }
+
+  Future<void> deleteDeviceToken() async {
+    await _firebaseMessaging.deleteToken();
+    print('FCM token deleted');
   }
 
   Future<void> subscribeToTopic(String topic) async {
@@ -119,7 +140,7 @@ class NotificationServices {
   }
 
   Future<void> _showNotification(RemoteMessage message) async {
-        await _setupFlutterNotifications(); 
+    await _setupFlutterNotifications();
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
     if (notification != null && android != null) {
@@ -154,7 +175,7 @@ class NotificationServices {
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
         await _showNotification(message);
-        _saveNotification(message);
+        // _saveNotification(message);
       }
     });
 
@@ -170,31 +191,42 @@ class NotificationServices {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
-  Future<void> _saveNotification(RemoteMessage message) async {
-    final prefs = await SharedPreferences.getInstance();
-    final notifications = prefs.getStringList('notifications') ?? [];
-    final notificationData = {
-      'title': message.notification?.title,
-      'body': message.notification?.body,
-    };
-    notifications.add(jsonEncode(notificationData));
-    await prefs.setStringList('notifications', notifications);
-  }
+  
+  Future<void> _updateTokenOnServer(String newToken) async {
+    final authService = AuthServices();
+    final success = await authService.updateDeviceToken(newToken);
 
-  Future<List<Map<String, String>>> getSavedNotifications() async {
-    final prefs = await SharedPreferences.getInstance();
-    final notifications = prefs.getStringList('notifications') ?? [];
-    return notifications
-        .map((e) => Map<String, String>.from(jsonDecode(e)))
-        .toList();
-  }
-
-  Future<void> deleteNotification(int index) async {
-    final prefs = await SharedPreferences.getInstance();
-    final notifications = prefs.getStringList('notifications') ?? [];
-    if (index >= 0 && index < notifications.length) {
-      notifications.removeAt(index);
-      await prefs.setStringList('notifications', notifications);
+    if (success) {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setInt(
+          'lastTokenUpdate', DateTime.now().millisecondsSinceEpoch);
     }
   }
 }
+
+ // Future<void> _saveNotification(RemoteMessage message) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final notifications = prefs.getStringList('notifications') ?? [];
+  //   final notificationData = {
+  //     'title': message.notification?.title,
+  //     'body': message.notification?.body,
+  //   };
+  //   notifications.add(jsonEncode(notificationData));
+  //   await prefs.setStringList('notifications', notifications);
+  // }
+
+  // Future<List<Map<String, String>>> getSavedNotifications() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final notifications = prefs.getStringList('notifications') ?? [];
+  //   return notifications
+  //       .map((e) => Map<String, String>.from(jsonDecode(e)))
+  //       .toList();
+  // }
+ // Future<void> deleteNotification(int index) async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final notifications = prefs.getStringList('notifications') ?? [];
+  //   if (index >= 0 && index < notifications.length) {
+  //     notifications.removeAt(index);
+  //     await prefs.setStringList('notifications', notifications);
+  //   }
+  // }

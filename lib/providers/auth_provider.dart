@@ -45,10 +45,17 @@ class AuthProvider extends ChangeNotifier {
       final UserModel? userModel = await _authServices.login(
           _emailController.text, _passwordController.text);
       if (userModel != null) {
-        await NotificationServices.instance.initialize();
-        // await _notificationServices.subscribeToTopic('order_admin');
+        // await NotificationServices.instance.subscribeToTopic('authenticated');
         if (context.mounted) {
           Navigator.of(context).pushReplacementNamed(AppRoutes.home);
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login failed. Please try again.'),
+            ),
+          );
         }
       }
       _isLoading = false;
@@ -78,12 +85,13 @@ class AuthProvider extends ChangeNotifier {
           AppRoutes.login,
           (route) => false);
     } else {
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Logout failed. Please try again.'),
-        ),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Logout failed. Please try again.'),
+          ),
+        );
+      }
     }
   }
 

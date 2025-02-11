@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ordering_system_admin/design_system/app_routes.dart';
 import 'package:ordering_system_admin/design_system/app_text.dart';
 import 'package:ordering_system_admin/enhancedmaterialapp.dart';
-import 'package:ordering_system_admin/services/notification_services.dart';
 import 'package:ordering_system_admin/services/sharedpreference_service.dart';
+import 'package:ordering_system_admin/services/workmanager_service.dart';
 import 'package:ordering_system_admin/views/auth/login/screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:ordering_system_admin/views/home/screen.dart';
 import 'firebase_options.dart';
 
-// final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -19,11 +18,16 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await NotificationServices.instance.initialize();
-  
+  // Initialize the periodic token update background task
+  await WorkManagerService.initialize().catchError((e) {
+    print("Background task setup failed: $e");
+  });
+
+  // await NotificationServices.instance.initialize();
+
   final SharedPreferenceService sharedPreferenceService =
       SharedPreferenceService();
-  final token = await sharedPreferenceService.getData('bearerToken');
+  // final token = await sharedPreferenceService.getData('bearerToken');
   // print('token $token');
   bool isLoggedIn = await sharedPreferenceService.getData('bearerToken') != null
       ? true

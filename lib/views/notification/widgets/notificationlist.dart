@@ -26,7 +26,7 @@ class NotificationList extends StatelessWidget {
                     text: notification.text,
                     createdAt: notification.createdAt,
                     onDelete: () async {
-                      await provider.deleteNotification(index);
+                      // await provider.deleteNotification(index);
                     },
                   ),
                   const Divider(

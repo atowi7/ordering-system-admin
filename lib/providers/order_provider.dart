@@ -55,13 +55,13 @@ class OrderProvider extends ChangeNotifier {
   //    print('selectedFilterStatus $_selectedFilterStatus');
   //   if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
   //     _selectedFilterStatus ??= _orderStatusList!.first['name'];
-     
+
   //   }
   //   int statusIndex = _orderStatusList!.firstWhere(
   //       (map) => map['name'] == _selectedFilterStatus,
   //       orElse: () => {'value': 1})['value'] as int;
   //       print('statusIndex $statusIndex');
-  //   _orderSubscription?.cancel(); 
+  //   _orderSubscription?.cancel();
   //   _orderSubscription = orderService
   //       .getOrders(context, statusIndex, _selectedFilterPayment)
   //       .listen(
@@ -75,13 +75,13 @@ class OrderProvider extends ChangeNotifier {
   //           volume: 0.5,
   //           asAlarm: false,
   //         );
-       
+
   //       }
   // //  _orders = orders;
   // //         _sortedOrders = _orders;
   // //         _orderStreamController.add(orders);
   // //         notifyListeners();
-        
+
   //     },
   //   );
   // }
@@ -126,15 +126,16 @@ class OrderProvider extends ChangeNotifier {
   // }
 
   Future<void> getOrders(BuildContext context) async {
-  if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
-    _selectedFilterStatus ??= _orderStatusList!.first['name'];
-  }
-  int statusIndex = _orderStatusList!.firstWhere(
-      (map) => map['name'] == _selectedFilterStatus,
-      orElse: () => {'value': 1})['value'] as int;
+    if (_orderStatusList != null && _orderStatusList!.isNotEmpty) {
+      _selectedFilterStatus ??= _orderStatusList!.first['name'];
+    }
+    int statusIndex = _orderStatusList!.firstWhere(
+        (map) => map['name'] == _selectedFilterStatus,
+        orElse: () => {'value': 1})['value'] as int;
 
-    final fetchedOrders =
-        await orderService.getOrders(context,statusIndex, _selectedFilterPayment);
+    final fetchedOrders = await orderService.getOrders(
+        context, statusIndex, _selectedFilterPayment);
+    print(fetchedOrders);
     if (fetchedOrders != null || fetchedOrders!.isNotEmpty) {
       _orders = fetchedOrders;
     }
@@ -255,9 +256,9 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> changeOrderStatus(
       BuildContext context, int orderId, String? newStatus) async {
-    final orderIndex = _orders!.indexWhere((o) => o.id == orderId);
-    if (orderIndex != -1) {
-      _orders![orderIndex].status = newStatus;
+    // final orderIndex = _orders!.indexWhere((o) => o.id == orderId);
+    // if (orderIndex != -1) {
+    //   _orders![orderIndex].status = newStatus;
       // print('newStatus $newStatus');
 
       try {
@@ -276,7 +277,7 @@ class OrderProvider extends ChangeNotifier {
                   backgroundColor: AppColors.primaryColor),
             );
           }
-
+          isRefresh = true;
           notifyListeners();
         } else {
           if (context.mounted) {
@@ -293,7 +294,7 @@ class OrderProvider extends ChangeNotifier {
       } catch (e) {
         print(e);
       }
-    }
+    
     // showStatusChangeDialog = false;
   }
 

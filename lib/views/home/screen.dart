@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const List<Widget> _screens = <Widget>[
     OrdersScreen(),
     ProfileScreen(),
-    NotificationScreen(),
+    // NotificationScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -48,10 +48,10 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.person_rounded),
             label: 'Profile',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications_rounded),
-            label: 'Notifications',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.notifications_rounded),
+          //   label: 'Notifications',
+          // ),
         ],
       ),
     );
